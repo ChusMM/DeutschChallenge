@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/forest">
+
+    <TextView
+        android:id="@+id/txUserInf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/userinf_en"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black" />
+
+    <RelativeLayout
+        android:id="@+id/relativeList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btBack"
+        android:layout_below="@+id/txUserInf"
+        android:gravity="center_vertical|center_horizontal" >
+
+        <ListView
+            android:id="@+id/listUsers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:cacheColorHint="#00000000" 
+            android:choiceMode="singleChoice">
+            <!--android:listSelector="@drawable/list_selector">-->      
+		</ListView>
+        
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="menu"
+        android:text="@string/menu_en" />
+
+    <Button
+        android:id="@+id/btGo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="next"
+        android:text="@string/nextq_en" />
+
+    <Button
+        android:id="@+id/btAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btGo"
+        android:layout_toRightOf="@+id/btBack"
+        android:gravity="center_vertical|center_horizontal"
+        android:onClick="newProfile"
+        android:text="@string/newprofile_en" />
+
+</RelativeLayout>

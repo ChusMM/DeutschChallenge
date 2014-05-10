@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/forest" >
+
+    <TextView
+        android:id="@+id/txSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/select_game"
+        android:textColor="@color/black"
+        android:textSize="@dimen/nameapp_size"
+        android:typeface="serif" />
+
+    <Button
+        android:id="@+id/btBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="backUserSelection"
+        android:text="@string/menu_en" />
+
+    <Button
+        android:id="@+id/btPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="play"
+        android:text="@string/play" />
+
+    <Button
+        android:id="@+id/btVerb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/btPlay"
+        android:layout_toRightOf="@+id/btBack"
+        android:onClick="verben"
+        android:text="@string/verben" />
+
+    <Button
+        android:id="@+id/btGram"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btVerb"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/btPlay"
+        android:layout_toRightOf="@+id/btBack"
+        android:onClick="gramatik"
+        android:text="@string/gramatik" />
+
+    <Button
+        android:id="@+id/btDDD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btVerb"
+        android:layout_toLeftOf="@+id/btPlay"
+        android:layout_toRightOf="@+id/btBack"
+        android:onClick="derdiedas"
+        android:text="@string/derdiedas" />
+
+</RelativeLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/bgmetal" >
+
+        <TextView
+            android:id="@+id/txAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/black"
+            android:textSize="@dimen/nameapp_size"
+            android:typeface="serif" />
+
+        <Button
+            android:id="@+id/btExit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:onClick="exit"
+            android:text="@string/exit_en" />
+
+        <Button
+            android:id="@+id/btMute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="@string/mute_en" />
+
+        <Button
+            android:id="@+id/btStart"
+            style="@drawable/button_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/btRanking"
+            android:layout_centerVertical="true"
+            android:background="@drawable/button_default"
+            android:onClick="start"
+            android:text="@string/start_en" />
+
+        <Button
+            android:id="@+id/btRanking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btStart"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_default"
+            android:onClick="showRanking"
+            android:text="@string/ranking_en" />
+
+    </RelativeLayout>

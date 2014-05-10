@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nameapp_size">36dp</dimen>
+    <dimen name="bigtext_size">30dp</dimen>
+    <dimen name="textpanel_size">23dp</dimen>
+    <dimen name="question_size">20dp</dimen>
+    <dimen name="answer_size">20dp</dimen>
+    <dimen name="answer_separation">10dp</dimen>
+    <dimen name="question_separation">5dp</dimen>
+    <dimen name="question_margin">2dp</dimen>
+    <dimen name="question_line_separation">3dp</dimen>
+</resources>

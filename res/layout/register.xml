@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="left"
+    android:background="@drawable/forest" >
+
+    <TextView
+        android:id="@+id/lbTerms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/termsconditions_en"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/lbPrivacy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/privacypolicy_en"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/btReg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lbPrivacy"
+        android:layout_alignParentRight="true"
+        android:onClick="register"
+        android:text="@string/register_en" />
+
+    <Button
+        android:id="@+id/btBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btReg"
+        android:layout_alignBottom="@+id/btReg"
+        android:layout_alignParentLeft="true"
+        android:onClick="menu"
+        android:text="@string/menu_en" />
+
+    <EditText
+        android:id="@+id/txName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lbMail"
+        android:layout_alignLeft="@+id/lbMail"
+        android:layout_alignRight="@+id/lbMail"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLength="10"
+        android:maxLines="1">
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/lbMail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txMail"
+        android:layout_alignRight="@+id/txMail"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/e_mail_en"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black" />
+
+    <EditText
+        android:id="@+id/txMail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lbMail"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:lines="1"
+        android:maxLength="254"
+        android:maxLines="1" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/lbName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txName"
+        android:layout_alignLeft="@+id/txName"
+        android:layout_alignRight="@+id/txName"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/fullname_en"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/registration_screen"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        android:textSize="@dimen/nameapp_size" />
+
+</RelativeLayout>
