@@ -170,16 +170,6 @@
             android:text="@string/ans3"
             android:textColor="@color/white"
             android:textSize="@dimen/answer_size" />
-
-        <include
-            android:id="@+id/inclAwards"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/btSound"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignRight="@+id/btSound"
-            layout="@layout/awards" />
     </RelativeLayout>
 
 </RelativeLayout>
