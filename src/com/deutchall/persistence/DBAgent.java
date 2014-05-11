@@ -1,200 +1,136 @@
 package com.deutchall.persistence;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-public class DBAgent {
+public class DBAgent extends SQLiteOpenHelper{
+	 
+	public static final String DATABASE_NAME = "DEUTCHA_DB";
+	public static final String DATABASE_PATH = "/data/data/com.deutchall.activities/databases/";
+	public static final String DATABASE_LOCATION = DATABASE_PATH + DATABASE_NAME ;
+	public static final int DATABASE_VERSION = 1;
+	
+	public static final String DER_DIE_DAS = "DER_DIE_DAS";
+	public static final String VERBEN      = "VERBEN";
+	public static final String GRAMATIK    = "GRAMATIK";
+	public static final String DDD_RANK    = "DDD_RANK";
+	public static final String VERB_RANK   = "VERB_RANK";
+	public static final String GRAM_RANK   = "GRAM_RANK";
+	public static final String USERS       = "USERS";
+	
+	public static final String DDD_KEY   = "_id";
+	public static final String VERB_KEY  = "_id";
+	public static final String GRAM_KEY  = "_id";
+	
+	public static final String QUESTION = "QUESTION";
+	public static final String ANS1     = "ANS1";
+	public static final String ANS2     = "ANS2";
+	public static final String ANS3     = "ANS3";
+	public static final String CORRECT  = "CORRECT";
+	
+	public static final String KEY_USER = "_id";
+	public static final String USERNAME = "USERNAME";
+	public static final String EMAIL    = "EMAIL";
+	
+	public static final String KEY_RANK = "_id";
+	public static final String UID      = "UID";
+	public static final String SCORE    = "SCORE";
 	
 	private static DBAgent instance = null;
-	private static SQLiteAdapter mySQLiteAdapter = null;
+	private static Context context;
+	private SQLiteDatabase sqLiteDatabase;
 	
-	private DBAgent () { }
+	private  DBAgent(Context c) {
+		super(c, DATABASE_NAME, null, DATABASE_VERSION);
+		try {
+			createDataBase();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public synchronized static DBAgent getInstance(Context c) {
-		
-		if(instance == null) {
-			instance = new DBAgent();
+		if (instance  != null) {
+			instance = new DBAgent(c );
 		}
-		mySQLiteAdapter = new SQLiteAdapter(c);
-		
+		context = c;
 		return instance;
 	}
 	
-	public synchronized void closeAdapter() {
-		
-		if(mySQLiteAdapter != null) {
-			
-			mySQLiteAdapter.close();
-			mySQLiteAdapter = null;
-		}	
-	}
-	
-	public void checkAndCreateDB() throws IOException {
-		
-		mySQLiteAdapter.createDataBase();
-	}
-	
-	public void insertUser(String username, String email) {
-		
-		if(mySQLiteAdapter.openToWrite().insertUser(username, email) < 0) {
-			throw new SQLiteException();
+	private void createDataBase() throws IOException {
+		if (checkDataBase()) {
+			this.getReadableDatabase();
+			copyDataBase() ;
 		}
-		this.closeAdapter();
 	}
 	
-	public Cursor getUsersCursor() {
-		
-		Cursor c = null;
-		c = mySQLiteAdapter.openToRead().queueUsers();
-		
-		return c;
+    private boolean checkDataBase() {
+        boolean checkDB = false;
+        try {
+        	
+        	String myPath = DATABASE_LOCATION;
+        	File dbFile = new File(myPath);
+        	checkDB = dbFile.exists();	
+        } 
+        catch (SQLiteException e) { 
+        	throw new SQLiteException();
+        }
+        
+        return checkDB;
+    }
+	
+    private void copyDataBase() throws IOException{
+    		int length;
+    		byte[] buffer = new byte[1024];
+    		
+    		InputStream input = context.getAssets().open(DATABASE_NAME);
+    		
+    		String outPutFileName = DATABASE_LOCATION ;
+    		OutputStream output = new FileOutputStream(outPutFileName); 
+            
+            while ((length = input.read(buffer)) > 0) {
+            	output.write(buffer, 0, length);
+            	output.flush();
+            }
+            output.close();
+            input.close();
+    }
+    	
+	public SQLiteDatabase openToRead() throws SQLException {		
+	    sqLiteDatabase = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READONLY);
+	    return this.sqLiteDatabase;
 	}
 	
-	public boolean existsUser(String username) {
-		
-		boolean exists = false;
-		
-		exists = mySQLiteAdapter.openToRead().existsUser(username);
-		this.closeAdapter();
-				
-		return exists;
+	public SQLiteDatabase openToWrite() throws SQLException {
+		sqLiteDatabase = this.getWritableDatabase();
+		return this.sqLiteDatabase;
 	}
 	
-	public boolean existsEmail(String email) {
-		
-		boolean exists = false;
-		
-		exists = mySQLiteAdapter.openToRead().existsEmail(email);
-		this.closeAdapter();
-				
-		return exists;
-	}
-	
-	public Cursor getDerDieDasCursor() {
-		
-		Cursor c = null;
-		c = mySQLiteAdapter.openToRead().queueDerDieDas();
-		
-		return c;
-	}
-	
-	public int nRowsDerDieDas() {
-		
-		int count = mySQLiteAdapter.openToRead().countDerDieDas();
-		this.closeAdapter();
-					
-		return count;
-	}
-
-	public Cursor getVerbenCursor() {
-		
-		Cursor c = null;
-		c = mySQLiteAdapter.openToRead().queueVerben();
-		
-		return c;
-	}
-	
-	public int nRowsVerben() {
-		
-		int count = mySQLiteAdapter.openToRead().countVerben();
-		this.closeAdapter();
-					
-		return count;
-	}
-	
-	public Cursor getGramatikCursor() {
-		
-		Cursor c = null;
-		c = mySQLiteAdapter.openToRead().queueGramatik();
-		
-		return c;
-	}
-	
-	public int nRowsGramatik() {
-		
-		int count = mySQLiteAdapter.openToRead().countGramatik();
-		this.closeAdapter();
-					
-		return count;
-	}
-
-
-	
-	public void insertDDDRanking(String name, String date, int score) {
-		
-		mySQLiteAdapter.openToWrite();
-		
-		if(mySQLiteAdapter.insertDDDRanking(name, date, score) < 0) {
-			throw new SQLiteException();
+	@Override
+	public void close() throws SQLiteException {
+		if (sqLiteDatabase != null) {
+			 sqLiteDatabase.close();
 		}
-		
-		this.closeAdapter();
+		super.close();
 	}
 	
-	public Cursor getRankingDDDCursor() {
-		
-		Cursor c = null;
-		c = mySQLiteAdapter.openToRead().queueDDDRanking();
-
-		return c;
-	}
-	
-	public void clearDDDRanking() {
-		
-		mySQLiteAdapter.openToWrite().deleteDDDRanking();
-		this.closeAdapter();
+	public void onCreate(SQLiteDatabase db) throws SQLException {
+		// TODO Auto-generated method stub
 	}
 
-	public void insertVerbRanking(String name, String date, int score) {
-		
-		mySQLiteAdapter.openToWrite();
-		
-		if(mySQLiteAdapter.insertVerbRanking(name, date, score) < 0) {
-			throw new SQLiteException();
-		}
-		
-		this.closeAdapter();
-	}
-	
-	public Cursor getRankingVerbCursor() {
-		
-		Cursor c = null;
-		c = mySQLiteAdapter.openToRead().queueVerbRanking();
-
-		return c;
-	}
-	
-	public void clearVerbRanking() {
-		
-		mySQLiteAdapter.openToWrite().deleteVerbRanking();
-		this.closeAdapter();
-	}
-	
-	public void insertGramRanking(String name, String date, int score) {
-		
-		mySQLiteAdapter.openToWrite();
-		
-		if(mySQLiteAdapter.insertGramRanking(name, date, score) < 0) {
-			throw new SQLiteException();
-		}
-		
-		this.closeAdapter();
-	}
-	
-	public Cursor getRankingGramCursor() {
-		
-		Cursor c = null;
-		c = mySQLiteAdapter.openToRead().queueGramRanking();
-
-		return c;
-	}
-	
-	public void clearGramRanking() {
-		
-		mySQLiteAdapter.openToWrite().deleteGramRanking();
-		this.closeAdapter();
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) throws SQLException {
+		// TODO Auto-generated method stub
+		//db.execSQL("DROP TABLE IF EXISTS " + DER_DIE_DAS);
+		//db.execSQL("DROP TABLE IF EXISTS " + RANKING);
+		//db.execSQL("DROP TABLE IF EXISTS " + USERS);
 	}
 }
