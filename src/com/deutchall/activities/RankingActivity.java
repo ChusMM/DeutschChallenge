@@ -4,62 +4,38 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
+import com.deutchall.identification.PFRanking;
 import com.deutchall.persistence.DBAgent;
-import com.deutchall.persistence.SQLiteAdapter;
 import com.deutchall.activities.R;
+import com.deutchall.adapters.RankingAdapter;
 
 public class RankingActivity extends Activity {
 
 	private ListView listView;
-	private Cursor cursor;
-	private String[] from;
-	private int[] to;
-	private SimpleCursorAdapter cursorAdapter;	
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-		
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ranking);
-        
         this.listView = (ListView)findViewById(R.id.contentlist);
-        
-        this.startCursor();
-        this.setFromTo();
         this.fillListView();
     }
 
 	@Override
 	public void onResume() {
-		
 		super.onResume();
-		this.cursor.requery();
 		this.fillListView();
 	}
 	
-	private void startCursor() {       
-		
-		this.cursor = DBAgent.getInstance(this).getRankingDDDCursor();
-		startManagingCursor(this.cursor);		
-	}
-	
-	private void setFromTo() {
-        
-		this.from = new String[] {SQLiteAdapter.UID, SQLiteAdapter.SCORE};
-        this.to = new int[] {R.id.txUID, R.id.txScore};
-	}
-	
 	private void fillListView() {
-		
-        this.cursorAdapter = new SimpleCursorAdapter(this, R.layout.rowrank, cursor, from, to);
-        this.listView.setAdapter(cursorAdapter);
+        RankingAdapter rankingAdapter = new RankingAdapter(this, PFRanking.getRanking(this, DBAgent.DERDIEDAS_ID));
+		this.listView.setFastScrollEnabled(true);
+		listView.setAdapter(rankingAdapter);
 	}
 	
 	public void menu(View view) {
@@ -75,12 +51,8 @@ public class RankingActivity extends Activity {
 		
 		super.onConfigurationChanged(newConfig);
 		
-		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-         //TODO
-		} 
-		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-         //TODO
-		}
+		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
+		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
     }
 	
 	@Override
@@ -149,17 +121,11 @@ public class RankingActivity extends Activity {
 	}
 
 	private void onClear() {
-		
-		DBAgent.getInstance(this).clearDDDRanking();
-		this.cursor.requery();
 		this.fillListView();
 		this.alertMsg("Ranking cleared");
 	}
 	
 	private void terminate() {
-		
-		this.cursor.close();
-		DBAgent.getInstance(this).closeAdapter();
 		RankingActivity.this.finish();
 	}
 }

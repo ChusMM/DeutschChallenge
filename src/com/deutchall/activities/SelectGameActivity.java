@@ -1,16 +1,16 @@
 package com.deutchall.activities;
 
-import com.deutchall.identification.Game;
-
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
+
+import com.deutchall.persistence.DBAgent;
 
 public class SelectGameActivity extends Activity {
 
@@ -56,7 +56,7 @@ public class SelectGameActivity extends Activity {
 	
 	public void derdiedas(View view) {
 		
-		this.gameSelected = Game.derdiedas.getGameId();
+		this.gameSelected = DBAgent.DERDIEDAS_ID;
 		this.setButtonsDefaultStyle();
 		this.btDDD.setBackgroundResource(R.drawable.button_gamesel_selected);
 		this.btDDD.setTextColor(getResources().getColor(R.color.white));
@@ -64,7 +64,7 @@ public class SelectGameActivity extends Activity {
 	
 	public void verben(View view) {
 		
-		this.gameSelected = Game.verben.getGameId();
+		this.gameSelected = DBAgent.VERBEN_ID;
 		this.setButtonsDefaultStyle();
 		this.btVerb.setBackgroundResource(R.drawable.button_gamesel_selected);
 		this.btVerb.setTextColor(getResources().getColor(R.color.white));
@@ -72,7 +72,7 @@ public class SelectGameActivity extends Activity {
 	
 	public void gramatik(View view) {
 		
-		this.gameSelected = Game.gramatik.getGameId();
+		this.gameSelected = DBAgent.GRAMATIK_ID;
 		this.setButtonsDefaultStyle();
 		this.btGram.setBackgroundResource(R.drawable.button_gamesel_selected);
 		this.btGram.setTextColor(getResources().getColor(R.color.white));

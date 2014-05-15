@@ -5,19 +5,27 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.deutchall.identification.Question;
+import com.deutchall.identification.Ranking;
+import com.deutchall.identification.User;
+
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DBAgent extends SQLiteOpenHelper{
+public class DBAgent extends SQLiteOpenHelper {
 	 
 	public static final String DATABASE_NAME = "DEUTCHA_DB";
 	public static final String DATABASE_PATH = "/data/data/com.deutchall.activities/databases/";
-	public static final String DATABASE_LOCATION = DATABASE_PATH + DATABASE_NAME ;
-	public static final int DATABASE_VERSION = 1;
+	public static final String DATABASE_LOCATION  = DATABASE_PATH + DATABASE_NAME ;
+	public static final int DATABASE_VERSION  = 1;
 	
 	public static final String DER_DIE_DAS = "DER_DIE_DAS";
 	public static final String VERBEN      = "VERBEN";
@@ -27,11 +35,8 @@ public class DBAgent extends SQLiteOpenHelper{
 	public static final String GRAM_RANK   = "GRAM_RANK";
 	public static final String USERS       = "USERS";
 	
-	public static final String DDD_KEY   = "_id";
-	public static final String VERB_KEY  = "_id";
-	public static final String GRAM_KEY  = "_id";
-	
-	public static final String QUESTION = "QUESTION";
+	public static final String QUESTION_KEY   = "_id";
+	public static final String HEADING = "QUESTION";
 	public static final String ANS1     = "ANS1";
 	public static final String ANS2     = "ANS2";
 	public static final String ANS3     = "ANS3";
@@ -42,8 +47,12 @@ public class DBAgent extends SQLiteOpenHelper{
 	public static final String EMAIL    = "EMAIL";
 	
 	public static final String KEY_RANK = "_id";
-	public static final String UID      = "UID";
+	public static final String RANK_NAME      = "UID";
 	public static final String SCORE    = "SCORE";
+	
+	public static final int DERDIEDAS_ID = 0;
+	public static final int VERBEN_ID = 1;
+	public static final int GRAMATIK_ID = 2;
 	
 	private static DBAgent instance = null;
 	private static Context context;
@@ -105,14 +114,14 @@ public class DBAgent extends SQLiteOpenHelper{
             input.close();
     }
     	
-	public SQLiteDatabase openToRead() throws SQLException {		
+	private SQLiteDatabase openToRead() throws SQLException {		
 	    sqLiteDatabase = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READONLY);
-	    return this.sqLiteDatabase;
+	    return sqLiteDatabase;
 	}
 	
-	public SQLiteDatabase openToWrite() throws SQLException {
+	private SQLiteDatabase openToWrite() throws SQLException {
 		sqLiteDatabase = this.getWritableDatabase();
-		return this.sqLiteDatabase;
+		return sqLiteDatabase;
 	}
 	
 	@Override
@@ -121,6 +130,81 @@ public class DBAgent extends SQLiteOpenHelper{
 			 sqLiteDatabase.close();
 		}
 		super.close();
+	}
+	
+	public List<User> selectUser(String[] columns, String selection, String[] selectionArgs, 
+													  		 String groupBy, String having, String orderBy) {
+		Cursor cursor = openToRead().query(USERS, columns, selection, selectionArgs, groupBy, having, orderBy);
+		List<User> users = cursorToUserList(cursor);
+		close();
+		return users;
+	}
+	
+	public List<Question> selectQuestion(String table, String[] columns, String selection, String[] selectionArgs, 
+													  							String groupBy, String having, String orderBy) {
+		Cursor cursor = openToRead().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+		List<Question> questions = cursorToQuestionList(cursor);
+		close();
+		return questions;
+	}
+	
+	public List<Ranking> selectRanking(String table, String[] columns, String selection, String[] selectionArgs, 
+																			String groupBy, String having, String orderBy) {
+		Cursor cursor = openToRead().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+		List<Ranking> ranking = cursorToRankingList(cursor);
+		close();
+		return ranking;
+	}
+	
+	public long insert(String table, ContentValues contentValues) {
+		long rowsAffected = openToWrite().insert(table, null, contentValues);
+		close();
+		return rowsAffected;
+	}
+	
+	public long delete(String table, String whereClause, String[] whereArgs) {
+		long rowsAffected = openToWrite().delete(table, whereClause, whereArgs);
+		close();
+		return rowsAffected;
+	}
+	
+	private List<User> cursorToUserList(Cursor cursor) {
+		List<User> users = new ArrayList<User>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			String name = cursor.getString(cursor.getColumnIndex(USERNAME));
+			String email = cursor.getString(cursor.getColumnIndex(EMAIL));
+			users.add(new User(name, email));
+		}
+		cursor.close();
+		return users;
+	}
+	
+	private List<Question> cursorToQuestionList(Cursor cursor) {
+		List<Question> questions = new ArrayList<Question>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			String heading = cursor.getString(cursor.getColumnIndex(HEADING));
+			String ans1 = cursor.getString(cursor.getColumnIndex(ANS1));
+			String ans2 = cursor.getString(cursor.getColumnIndex(ANS2));
+			String ans3 = cursor.getString(cursor.getColumnIndex(ANS3));
+			int correct = cursor.getInt(cursor.getColumnIndex(CORRECT));
+			questions.add(new Question(heading, ans1, ans2, ans3, correct));
+		}
+		cursor.close();
+		return questions;
+	}
+	
+	private List<Ranking> cursorToRankingList(Cursor cursor) {
+		List<Ranking> ranking = new ArrayList<Ranking>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			String name = cursor.getString(cursor.getColumnIndex(RANK_NAME));
+			int score = cursor.getInt(cursor.getColumnIndex(SCORE));
+			ranking.add(new Ranking(name, score));
+		}
+		cursor.close();
+		return ranking;
 	}
 	
 	public void onCreate(SQLiteDatabase db) throws SQLException {

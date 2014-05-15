@@ -1,11 +1,8 @@
 package com.deutchall.activities;
 
-import java.io.IOException;
-
 import com.deutchall.activities.MainActivity;
 import com.deutchall.activities.RankingActivity;
 import com.deutchall.activities.UserActivity;
-import com.deutchall.persistence.DBAgent;
 import com.deutchall.activities.R;
 
 import android.app.Activity;
@@ -24,12 +21,6 @@ public class MainActivity extends Activity {
     	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-        try {
-			DBAgent.getInstance(this).checkAndCreateDB();
-		} catch (IOException e) {
-			throw new Error("Error: copy database from file");
-		}
     }
     
     public void start(View view) {

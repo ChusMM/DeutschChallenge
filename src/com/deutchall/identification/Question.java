@@ -2,23 +2,23 @@ package com.deutchall.identification;
 
 public class Question {
 	
-	private String question;
+	private String heading;
 	private String ans1;
 	private String ans2;
 	private String ans3;
 	private int correct;
 	
-	public Question(String question, String ans1, String ans2, String ans3, int correct) {
+	public Question(String heading, String ans1, String ans2, String ans3, int correct) {
 		
-		this.question = question;
+		this.heading = heading;
 		this.ans1 = ans1;
 		this.ans2 = ans2;
 		this.ans3 = ans3;
 		this.correct = correct;
 	}
 	
-	public String getQuestion() {
-		return this.question;
+	public String getHeading() {
+		return this.heading;
 	}
 	
 	public String getAns1() {
@@ -37,8 +37,8 @@ public class Question {
 		return this.correct;
 	}
 	
-	public void setQuestion(String question) {
-		this.question = question;
+	public void setHeading(String heading) {
+		this.heading = heading;
 	}
 	
 	public void setAns1(String ans1) {
@@ -59,13 +59,10 @@ public class Question {
 	
 	@Override
 	public boolean equals(Object o) {
-		
-		if(o instanceof Question) {
-			
+		if (o instanceof Question) {
 			Question aux = (Question) o;
-			return this.question.equals(aux.question);
-		} 
-		else {
+			return aux.heading.equals(this.heading);
+		}  else {
 			return false;
 		}
 	}

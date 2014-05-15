@@ -2,8 +2,8 @@ package com.deutchall.activities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,8 +11,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.deutchall.identification.PFQuestion;
+import com.deutchall.identification.PFRanking;
 import com.deutchall.identification.Question;
-import com.deutchall.persistence.DBAgent;
 import com.deutchall.activities.R;
 
 import android.app.Activity;
@@ -44,7 +44,7 @@ public class GameActivity extends Activity {
 	private int score = 0;
 	private int nQuestion = 0;
 	private String result = "";
-	private ArrayList<Question> questions;
+	private List<Question> questions;
 	private int checkedRadioButton = -1;
 	private int correctAns = -1;
 	private Timer updateTimeout;
@@ -79,7 +79,7 @@ public class GameActivity extends Activity {
         
         this.name = args[0];
         this.gameId = Integer.parseInt(args[1]);
-        this.questions = PFQuestion.retrieveQuestions(this, gameId);
+        this.questions = PFQuestion.getGameQuestions(this, gameId);
         
         this.txName = (TextView)findViewById(R.id.txName);
         this.txScore = (TextView)findViewById(R.id.txScore);
@@ -430,7 +430,7 @@ public class GameActivity extends Activity {
 	private void rankingAndClose() {
 	
 		String date = this.getDate();
-		DBAgent.getInstance(this).insertDDDRanking(this.name, date, this.score);
+		PFRanking.insertIntoRankingGame(this, gameId, name, date, score);
 		this.gameover();
 	}
 			
@@ -505,7 +505,7 @@ public class GameActivity extends Activity {
 	private void updateGameStatus() {
 		
         this.txNQuestion.setText("Question: "+ (this.nQuestion + 1));
-        this.txQuestion.setText(questions.get(this.nQuestion).getQuestion());
+        this.txQuestion.setText(questions.get(this.nQuestion).getHeading());
 	}
 	
 	private void updateScore() {

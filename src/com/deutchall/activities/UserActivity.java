@@ -5,74 +5,49 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
-import com.deutchall.persistence.DBAgent;
-import com.deutchall.persistence.SQLiteAdapter;
+import com.deutchall.identification.PFUser;
 import com.deutchall.activities.R;
+import com.deutchall.adapters.UserAdapter;
 
 public class UserActivity extends Activity {
 	
 	public final static String EXTRA_MESSAGE = "com.deutchall.src.USER";
 	
 	private ListView listView;
-	private Cursor cursor;
-	private String[] from;
-	private int[] to;
-	private SimpleCursorAdapter cursorAdapter;
 	private String selectedUser = "";
 	private int androidVersion;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-		
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user);
         
         this.listView = (ListView)findViewById(R.id.listUsers);
-        
         this.androidVersion = Integer.parseInt(android.os.Build.VERSION.RELEASE.substring(0, 1));
-        //TextView tx = (TextView)findViewById(R.id.txUserInf);
-        //tx.setText(String.valueOf(androidVersion));
         
-        this.startCursor();
-        this.setFromTo();
         this.fillListView();
         this.setListListener();
     }
 	
 	@Override
 	public void onResume() {
-		
 		super.onResume();
 		this.selectedUser = "";
-		this.cursor.requery();
 		this.fillListView();
 	}
 	
-	private void startCursor() {
-		
-        this.cursor = DBAgent.getInstance(this).getUsersCursor();
-        startManagingCursor(this.cursor);
-	}
-	
-	private void setFromTo() {
-		
-        this.from = new String[] {SQLiteAdapter.USERNAME};
-        this.to = new int[] {R.id.txRowUser};
-	}
-	
 	private void fillListView() {
-		
-        this.cursorAdapter = new SimpleCursorAdapter(this, R.layout.rowuser, this.cursor, this.from, this.to);
-        this.listView.setAdapter(this.cursorAdapter);
+		UserAdapter userAdapter = new UserAdapter(this, PFUser.select(this));
+		this.listView.setFastScrollEnabled(true);
+		listView.setAdapter(userAdapter);
 	}
 	
 	private void setListListener() {
@@ -83,27 +58,19 @@ public class UserActivity extends Activity {
 				
 				int desiredPos;
 				
-				if(androidVersion >= 4) {
+				if (androidVersion >= 4) {
 					desiredPos = pos;
-				}
-				else {
+				} else {
 					int lastPos = parent.getLastVisiblePosition();
 					desiredPos = lastPos - pos;
 				}
-	        
-	        	for(int i = 0; i < parent.getChildCount(); i++) {
+	        	for (int i = 0; i < parent.getChildCount(); i++) {
 	        		parent.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.shadow));
 	        	}
 	        	
 	        	parent.getChildAt(desiredPos).setBackgroundColor(getResources().getColor(R.color.selected));
-	        	
-	        	Cursor aux = (Cursor) parent.getItemAtPosition(pos);
-	        	if(aux.moveToPosition(pos)) {
-	        			
-	        		int colIndex = aux.getColumnIndex(SQLiteAdapter.USERNAME);
-	        		selectedUser = aux.getString(colIndex);
-	        	}
-	        	aux.requery();
+	        	TextView usr = (TextView) parent.getItemAtPosition(pos);
+	        	selectedUser = usr.getText().toString();
 	        }
 		});
 	}
@@ -186,9 +153,6 @@ public class UserActivity extends Activity {
 	}
 	
 	private void terminate() {
-		
-		this.cursor.close();
-		DBAgent.getInstance(this).closeAdapter();
 		UserActivity.this.finish();
 	}
 }

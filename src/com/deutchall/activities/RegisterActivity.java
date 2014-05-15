@@ -9,17 +9,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.deutchall.persistence.DBAgent;
-import com.deutchall.activities.R;
+import com.deutchall.identification.PFUser;
 
-public class RegisterActivity extends Activity{
+public class RegisterActivity extends Activity {
 	
 	public final static String EXTRA_MESSAGE = "com.deutchall.src.REGISTER";
 	
 	private final String SUBJECT = "Deutsch Challenge application registration";
 	private final String MESSAGE_BODY = "Welcome to Deutsch Challenge.\nThank you for registering in german learning app!\n" +
-									      "We are grateful to have you as a customer of our application and we expect it will be useful for your learning german proccess.\n" + 
-									      "We highly recommend you read our privacy policy along with the using terms and conditions";	
+									      "We are grateful to have you as a customer of our application and we expect it will be useful for your german learning proccess.\n" + 
+									      "We strongly recommend you read our privacy policy along with the using terms and conditions";	
 	private TextView txUser;
 	private TextView txEmail;
 	
@@ -40,33 +39,24 @@ public class RegisterActivity extends Activity{
 		
 		super.onConfigurationChanged(newConfig);
 		
-		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-         //TODO
-		} 
-		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-         //TODO
-		}
+		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
+		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
     }
 	
 	public void registry(Bundle savedInstanceState) { }
 		
 	public void register(View view) {
-		
 		boolean checkPoint = false;
 		
-					
 		String user = txUser.getText().toString();
 		String email = txEmail.getText().toString();
 			
-		checkPoint = this.checkFields(user, this.txEmail.getText()) & !this.existingFields(user, email);
-			
+		checkPoint = this.checkFields(user, this.txEmail.getText()) & !this.existingEmail(email);
 		if(checkPoint) {
-				
 			com.deutchall.utilities.MailSender sender = new com.deutchall.utilities.MailSender(email, "123", this);
 			sender.sendMail(SUBJECT, MESSAGE_BODY, "noreply@deutschallenge.com", email);
 			
-			DBAgent.getInstance(this).insertUser(user, email);
-				
+			PFUser.insert(this, user, email);
 			this.terminate();		
 		}
 	}
@@ -90,15 +80,9 @@ public class RegisterActivity extends Activity{
 		}
 	}
 	
-	private boolean existingFields(String user, String email) {
+	private boolean existingEmail(String email) {
 		
-		if(DBAgent.getInstance(this).existsUser(user)) {
-			
-			alertMsg("User " + user + " already exists");
-			return true;
-			
-		} else if(DBAgent.getInstance(this).existsEmail(email)) {
-			
+		if(PFUser.existsEmail(this, email)) {
 			alertMsg("E-Mail " + email + " already exists");
 			return true;
 		}
@@ -148,7 +132,6 @@ public class RegisterActivity extends Activity{
 	}
 	
 	private void terminate() {
-		DBAgent.getInstance(this).closeAdapter();
 		RegisterActivity.this.finish();
 	}
 }
