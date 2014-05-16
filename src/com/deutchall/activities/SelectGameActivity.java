@@ -19,7 +19,7 @@ public class SelectGameActivity extends Activity {
 	private Button btVerb;
 	private Button btGram;
 	
-	public final static String EXTRA_MESSAGE = "com.deutchall.src.SELECT";
+	public final static String GAME = "game";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,24 +30,22 @@ public class SelectGameActivity extends Activity {
 		this.btDDD = (Button)findViewById(R.id.btDDD);
 		this.btVerb = (Button)findViewById(R.id.btVerb);
 		this.btGram = (Button)findViewById(R.id.btGram);
-		
 		this.setButtonsDefaultStyle();
-	}
-	
-	private void getNameFromIntent() {
-		Intent intent = getIntent();
-		if((this.name = intent.getStringExtra(UserActivity.EXTRA_MESSAGE)) == null) {
-			throw new Error("SelectGameActivity: user name null pointer exception");
-		}
 	}
 	
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);	
-		
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
 		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
     }
+	
+	private void getNameFromIntent() {
+		Intent intent = getIntent();
+		if((this.name = intent.getStringExtra(UserActivity.USER)) == null) {
+			throw new Error("SelectGameActivity: user name null pointer exception");
+		}
+	}
 	
 	public void derdiedas(View view) {
 		this.gameSelected = DBAgent.DERDIEDAS_ID;
@@ -81,12 +79,9 @@ public class SelectGameActivity extends Activity {
 	}
 		
 	public void play(View view) {
-		String[] args = new String[2];
-		args[0] = this.name;
-		args[1] = String.valueOf(this.gameSelected);
-		
 		Intent intent = new Intent(this, GameActivity.class);
-		intent.putExtra(EXTRA_MESSAGE, args);
+		intent.putExtra(UserActivity.USER, name);
+		intent.putExtra(GAME, gameSelected);
     	startActivity(intent);
     	
     	SelectGameActivity.this.finish();

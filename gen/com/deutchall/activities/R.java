@@ -55,35 +55,34 @@ public final class R {
     }
     public static final class id {
         public static final int RelativeLayout=0x7f0a001b;
-        public static final int btAdd=0x7f0a002d;
+        public static final int btAdd=0x7f0a002c;
         public static final int btBack=0x7f0a0018;
         public static final int btClear=0x7f0a001a;
-        public static final int btDDD=0x7f0a0029;
+        public static final int btDDD=0x7f0a0028;
         public static final int btExit=0x7f0a0011;
-        public static final int btGo=0x7f0a002c;
-        public static final int btGram=0x7f0a0028;
+        public static final int btGo=0x7f0a002b;
+        public static final int btGram=0x7f0a0027;
         public static final int btMenu=0x7f0a000c;
         public static final int btMute=0x7f0a0012;
-        public static final int btPlay=0x7f0a0026;
+        public static final int btPlay=0x7f0a0025;
         public static final int btRanking=0x7f0a0014;
         public static final int btReg=0x7f0a001e;
         public static final int btSound=0x7f0a000a;
         public static final int btStart=0x7f0a0013;
-        public static final int btVerb=0x7f0a0027;
+        public static final int btVerb=0x7f0a0026;
         public static final int contentlist=0x7f0a0019;
         public static final int lbMail=0x7f0a001f;
         public static final int lbName=0x7f0a0021;
         public static final int lbPrivacy=0x7f0a001d;
         public static final int lbTerms=0x7f0a001c;
-        public static final int listUsers=0x7f0a002b;
-        public static final int menu_settings=0x7f0a002e;
+        public static final int listUsers=0x7f0a002a;
+        public static final int menu_settings=0x7f0a002d;
         public static final int radio0=0x7f0a000e;
         public static final int radio1=0x7f0a000f;
         public static final int radio2=0x7f0a000b;
         public static final int relativeGame=0x7f0a0000;
         public static final int relativeList=0x7f0a0017;
         public static final int relativeQuestion=0x7f0a0008;
-        public static final int tableRow1=0x7f0a0005;
         public static final int tableRow2=0x7f0a0002;
         public static final int topPanel=0x7f0a0001;
         public static final int txAppName=0x7f0a0010;
@@ -94,13 +93,13 @@ public final class R {
         public static final int txRankScore=0x7f0a0016;
         public static final int txRankUser=0x7f0a0015;
         public static final int txResult=0x7f0a0009;
-        public static final int txRowUser=0x7f0a0024;
         public static final int txScore=0x7f0a0006;
         public static final int txScreenName=0x7f0a0022;
-        public static final int txSelect=0x7f0a0025;
+        public static final int txSelect=0x7f0a0024;
         public static final int txTime=0x7f0a0007;
         public static final int txUID=0x7f0a0023;
-        public static final int txUserInf=0x7f0a002a;
+        public static final int txUserInf=0x7f0a0029;
+        public static final int userNameRow=0x7f0a0005;
     }
     public static final class integer {
         public static final int checkedRB=0x7f070000;

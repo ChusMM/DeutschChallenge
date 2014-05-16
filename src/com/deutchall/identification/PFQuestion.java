@@ -23,14 +23,12 @@ public class PFQuestion {
 	
 	public static List<Question> select(Context context, String questionTable) {
 		String[] columns = new String[] {DBAgent.QUESTION_KEY, DBAgent.HEADING, DBAgent.ANS1, DBAgent.ANS2, DBAgent.ANS3, DBAgent.CORRECT};
-		
 		List<Question> questions = DBAgent.getInstance(context).selectQuestion(questionTable, columns, null, null, null, null, null);
 		return questions;
 	}
 	
 	public int count(Context context, String questionTable) {
 		String[] columns = new String[] {DBAgent.QUESTION_KEY};
-		
 		List<Question> questions = DBAgent.getInstance(context).selectQuestion(questionTable, columns, null, null, null, null, null);
 		return questions.size();
 	}

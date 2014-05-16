@@ -32,11 +32,14 @@ public class PFRanking {
 	public static void insertIntoRankingGame(Context context, int idGame, String name, String date, int score) {
 		switch(idGame) {
 		case DBAgent.DERDIEDAS_ID:
-			insert(context, DBAgent.DER_DIE_DAS, name, date, score);
+			insert(context, DBAgent.DDD_RANK, name, date, score);
+			break;
 		case DBAgent.VERBEN_ID:
 			insert(context, DBAgent.VERB_RANK, name, date, score);
+			break;
 		case DBAgent.GRAMATIK_ID:
 			insert(context, DBAgent.GRAM_RANK, name, date, score);
+			break;
 		default:
 			throw new Error("GameActivity: invalid game identificator");
 		}
@@ -46,7 +49,6 @@ public class PFRanking {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBAgent.RANK_NAME, name + " - " + date);
 		contentValues.put(DBAgent.SCORE, score);
-
 		DBAgent.getInstance(context).insert(rankingTable, contentValues);
 	}
 	
@@ -54,10 +56,13 @@ public class PFRanking {
 		switch(idGame) {
 		case DBAgent.DERDIEDAS_ID:
 			delete(context, DBAgent.DDD_RANK);
+			break;
 		case DBAgent.VERBEN_ID:
 			delete(context, DBAgent.VERBEN);
+			break;
 		case DBAgent.GRAMATIK_ID:
 			delete(context, DBAgent.GRAM_RANK);
+			break;
 		default:
 			throw new Error("GameActivity: invalid game identificator");
 		}

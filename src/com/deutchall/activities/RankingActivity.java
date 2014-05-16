@@ -17,80 +17,56 @@ import com.deutchall.adapters.RankingAdapter;
 public class RankingActivity extends Activity {
 
 	private ListView listView;
+	private boolean created  = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ranking);
         this.listView = (ListView)findViewById(R.id.contentlist);
-        this.fillListView();
+        this.created = true;
+        fillListView();
     }
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		this.fillListView();
+		if(created) {
+			fillListView();
+		}
 	}
 	
 	private void fillListView() {
         RankingAdapter rankingAdapter = new RankingAdapter(this, PFRanking.getRanking(this, DBAgent.DERDIEDAS_ID));
-		this.listView.setFastScrollEnabled(true);
+		listView.setFastScrollEnabled(true);
 		listView.setAdapter(rankingAdapter);
 	}
 	
 	public void menu(View view) {
-		this.back();
+		terminate();
 	}
 	
 	public void clear(View view) {
-		this.clearConfRequest();
+		clearConfRequest();
 	}
 	 
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
-		
 		super.onConfigurationChanged(newConfig);
-		
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
 		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
     }
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-	    	this.back();
+	    	terminate();;
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
 	
-	private void back() {
-    	
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
-		builder.setMessage("Back to main menu?")
-		       .setCancelable(false)
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		    	   
-		    	   public void onClick(DialogInterface dialog, int id) {
-		    		   terminate();
-		           }
-		       })
-		       
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		                dialog.cancel();
-		           }
-		       });
-		
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-	
 	private void clearConfRequest() {
-    	
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
 		builder.setMessage("Do you really want to clear all ranking registers?")
 		       .setCancelable(false)
 		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -105,13 +81,11 @@ public class RankingActivity extends Activity {
 		                dialog.cancel();
 		           }
 		       });
-		
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
 
 	private void alertMsg(String msg) {
-		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Attention");
         builder.setMessage(msg);
@@ -121,8 +95,9 @@ public class RankingActivity extends Activity {
 	}
 
 	private void onClear() {
-		this.fillListView();
-		this.alertMsg("Ranking cleared");
+		fillListView();
+		PFRanking.deleteRankingGame(this, DBAgent.DERDIEDAS_ID);
+		alertMsg("Ranking cleared");
 	}
 	
 	private void terminate() {

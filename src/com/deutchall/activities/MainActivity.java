@@ -3,11 +3,8 @@ package com.deutchall.activities;
 import com.deutchall.activities.MainActivity;
 import com.deutchall.activities.RankingActivity;
 import com.deutchall.activities.UserActivity;
-import com.deutchall.activities.R;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -18,7 +15,6 @@ public class MainActivity extends Activity {
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     }
@@ -41,7 +37,6 @@ public class MainActivity extends Activity {
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 	    	this.terminate();
 	    }
-	    
 	    return super.onKeyDown(keyCode, event);
 	}
     
@@ -50,38 +45,13 @@ public class MainActivity extends Activity {
     }
     
 	private void terminate() {
-		
-    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	
-		builder.setMessage("¿Are you sure you want to leave?")
-		       .setCancelable(false)
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		    	   
-		    	   public void onClick(DialogInterface dialog, int id) {
-		        	  MainActivity.this.finish();
-		           }
-		       })
-		       
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		                dialog.cancel();
-		           }
-		       });
-		
-		AlertDialog alert = builder.create();
-		alert.show();
+		MainActivity.this.finish();          
     }
 
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
-		
 		super.onConfigurationChanged(newConfig);
-		
-		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-         //TODO
-		} 
-		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-         //TODO
-		}
+		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
+		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
     }
 }

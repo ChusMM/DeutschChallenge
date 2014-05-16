@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/txRowUser"
+    android:id="@+id/userNameRow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="left"
-    android:layout_marginLeft="3dp"
-    android:background="#80000000"
-    android:lines="1"
-    android:maxLines="1"
-    android:text="@string/titulo"
-    android:textAppearance="?android:attr/textAppearanceMedium"
-    android:textColor="@color/white" >
+    android:background="@color/shadow"
+    android:text="@string/app_name"
+    android:textAppearance="?android:attr/textAppearanceLarge">
 </TextView>

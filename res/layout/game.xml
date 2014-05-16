@@ -40,7 +40,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow1"
+            android:id="@+id/userNameRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2" >

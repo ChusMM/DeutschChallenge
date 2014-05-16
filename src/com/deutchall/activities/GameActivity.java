@@ -69,39 +69,34 @@ public class GameActivity extends Activity {
 		
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-		
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.game);
+     
+        name = getIntent().getStringExtra(UserActivity.USER);
+        gameId = getIntent().getIntExtra(SelectGameActivity.GAME, -1);
+        questions = PFQuestion.getGameQuestions(this, gameId);
         
-        Intent intent = getIntent();
-        String[] args = intent.getStringArrayExtra(SelectGameActivity.EXTRA_MESSAGE);
+        txName = (TextView)findViewById(R.id.txName);
+        txScore = (TextView)findViewById(R.id.txScore);
+        txNQuestion = (TextView)findViewById(R.id.txNQuestion);
+        txQuestion = (TextView)findViewById(R.id.txQuestion);
+        txTime = (TextView)findViewById(R.id.txTime);
+        rad0 = (Button)findViewById(R.id.radio0);
+        rad1 = (Button)findViewById(R.id.radio1);
+        rad2 = (Button)findViewById(R.id.radio2);
+        txResult = (TextView)findViewById(R.id.txResult);
         
-        this.name = args[0];
-        this.gameId = Integer.parseInt(args[1]);
-        this.questions = PFQuestion.getGameQuestions(this, gameId);
+        txName.setText(name);
+        setFullQuestionVisibility(View.GONE);
         
-        this.txName = (TextView)findViewById(R.id.txName);
-        this.txScore = (TextView)findViewById(R.id.txScore);
-        this.txNQuestion = (TextView)findViewById(R.id.txNQuestion);
-        this.txQuestion = (TextView)findViewById(R.id.txQuestion);
-        this.txTime = (TextView)findViewById(R.id.txTime);
-        this.rad0 = (Button)findViewById(R.id.radio0);
-        this.rad1 = (Button)findViewById(R.id.radio1);
-        this.rad2 = (Button)findViewById(R.id.radio2);
-        this.txResult = (TextView)findViewById(R.id.txResult);
-        
-        this.txName.setText(this.name);
-        this.setFullQuestionVisibility(View.GONE);
-        
-        this.setEnableAnswers(false);
-        this.updateScore();
-        this.launchNextQuestion();
+        setEnableAnswers(false);
+        updateScore();
+        launchNextQuestion();
     }
 	
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
-		
 		super.onConfigurationChanged(newConfig);
 		
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
@@ -110,106 +105,94 @@ public class GameActivity extends Activity {
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
-	    if((keyCode == KeyEvent.KEYCODE_BACK)) {
-	    	this.back();
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	    	back();
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
 	
 	public void resp0(View view) throws InterruptedException {
-		
 		((Button)findViewById(R.id.radio0)).setSelected(true);
 		((Button)findViewById(R.id.radio1)).setSelected(false);
 		((Button)findViewById(R.id.radio2)).setSelected(false);
-		this.answer();
+		answer();
 	}
 	
 	public void resp1(View view) throws InterruptedException {
-		
 		((Button)findViewById(R.id.radio0)).setSelected(false);
 		((Button)findViewById(R.id.radio1)).setSelected(true);
 		((Button)findViewById(R.id.radio2)).setSelected(false);
-		this.answer();
+		answer();
 	}
 	
 	public void resp2(View view) throws InterruptedException {
-		
 		((Button)findViewById(R.id.radio0)).setSelected(false);
 		((Button)findViewById(R.id.radio1)).setSelected(false);
 		((Button)findViewById(R.id.radio2)).setSelected(true);
-		this.answer();
+		answer();
 	}
 	
 	public void menu(View view) {
-		this.back();
+		back();
 	}
 			
 	private void answer() throws InterruptedException {
-
-		this.setEnableAnswers(false);
-		this.cancelUpdateTime();
-		this.checkedRadioButton = this.radChecked();
+		setEnableAnswers(false);
+		cancelUpdateTime();
+		checkedRadioButton = radChecked();
 		
-		this.launchCheckAnswer();
+		launchCheckAnswer();
     }
 			
 	private void launchUpdateTimeout() {
-		this.RemainingTimeHandler.post(updateTimeoutRunnable);
+		RemainingTimeHandler.post(updateTimeoutRunnable);
 	}
 	
 	private void launchCheckAnswer() {
 		lock.lock();
-		
 		try {
-			
-			if(!this.called) {
-				this.setCalled(true);
-				this.timeOutHandler.post(checkAnswerRunnable);
+			if (!called) {
+				setCalled(true);
+				timeOutHandler.post(checkAnswerRunnable);
 			}
-			
 		} finally {
 			lock.unlock();
 		}
 	}
 	
 	private void launchEval() {
-		this.timeHandler.post(evalRunnable);
+		timeHandler.post(evalRunnable);
 	}
 	
 	private void launchHide() {
-		this.timeHandler.post(hideButtonsRunnable);
+		timeHandler.post(hideButtonsRunnable);
 	}
 	
 	private void launchGoToNext() {
-		this.timeHandler.post(nextRunnable);
+		timeHandler.post(nextRunnable);
 	}
 		
-	private void launchShowQuestionView(View v) {
-		
-		final ShowQuestionViewRunnable showRunnable = new ShowQuestionViewRunnable(v);
-		this.animTimeHandler.post(showRunnable);
+	private void launchShowQuestionView(View view) {
+		final ShowQuestionViewRunnable showRunnable = new ShowQuestionViewRunnable(view);
+		animTimeHandler.post(showRunnable);
 	}
 	
-	private void launchHideQuestionView(View v) {
-		
-		final HideQuestionViewRunnable hideRunnable = new HideQuestionViewRunnable(v);
-		this.animTimeHandler.post(hideRunnable);
+	private void launchHideQuestionView(View view) {
+		final HideQuestionViewRunnable hideRunnable = new HideQuestionViewRunnable(view);
+		animTimeHandler.post(hideRunnable);
 	}
 	
 	final Runnable updateTimeoutRunnable = new Runnable() {
 		public void run() {
-			
 			txTime.setVisibility(View.GONE);
-			if(remainingTime >= 0) animTxTime(txTime, remainingTime);
-			
-			if(remainingTime < 0) {
-				
+			if (remainingTime >= 0) {
+				animTxTime(txTime, remainingTime);
+			}
+			if (remainingTime < 0) {
 				setEnableAnswers(false);
 				remainingTime = 0;
 				cancelUpdateTime();
 				launchCheckAnswer();
-				
 			} else {
 				remainingTime --;
 			}
@@ -243,26 +226,24 @@ public class GameActivity extends Activity {
 	};
 
 	private class ShowQuestionViewRunnable implements Runnable {
-		View v;
-		public ShowQuestionViewRunnable(View v) {this.v = v; }
+		View view;
+		public ShowQuestionViewRunnable(View view) {this.view = view; }
 		public void run() {
-			animShowQuestionView(v);
+			animShowQuestionView(view);
 		}
 	}
 	
 	private class HideQuestionViewRunnable implements Runnable {
-		View v;
-		public HideQuestionViewRunnable(View v) {this.v = v; }
+		View view;
+		public HideQuestionViewRunnable(View view) {this.view = view; }
 		public void run() {
-			animHideQuestionView(v);
+			animHideQuestionView(view);
 		}
 	}
 	
 	private void timerUpdateTimeout() {
-		
-		this.updateTimeout = new Timer();
-
-		this.updateTimeout.schedule(new TimerTask() {
+		updateTimeout = new Timer();
+		updateTimeout.schedule(new TimerTask() {
 			@Override
 			public void run () {
 				launchUpdateTimeout();
@@ -270,42 +251,33 @@ public class GameActivity extends Activity {
 		}, 0, second);
 	}
 	
-	private void timerShowQuestionView(final View v, int miliseconds) {
-		
+	private void timerShowQuestionView(final View view, int miliseconds) {
 		Timer showTimer = new Timer();
-		
 		showTimer.schedule(new TimerTask() {
 			@Override
-			public void run() { launchShowQuestionView(v); } 
+			public void run() { launchShowQuestionView(view); } 
 		}, miliseconds);		
 	}
 	
-	private void timerHideQuestionView(final View v, int miliseconds) {
-		
+	private void timerHideQuestionView(final View view, int miliseconds) {
 		Timer showTimer = new Timer();
-		
 		showTimer.schedule(new TimerTask() {
 			@Override
-			public void run() { launchHideQuestionView(v); } 
+			public void run() { launchHideQuestionView(view); } 
 		}, miliseconds);		
 	}
 
 	private void timerEvaluationSequence() {
-		
 		Timer ansTimer = new Timer();
-		
-		int baseTime = this.getBaseTime();
-		
+		int baseTime = getBaseTime();
 		ansTimer.schedule(new TimerTask() {
 			@Override
 			public void run() { launchEval(); } 
 		}, baseTime);
-		
 		ansTimer.schedule(new TimerTask() {
 			@Override
 			public void run() { launchHide(); } 
 		}, baseTime + 1000);
-		
 		ansTimer.schedule(new TimerTask() {
 			@Override
 			public void run() { launchGoToNext(); } 
@@ -313,74 +285,62 @@ public class GameActivity extends Activity {
 	}
 		
 	private void cancelUpdateTime() {
-		this.updateTimeout.cancel();
-		this.updateTimeout.purge();
+		updateTimeout.cancel();
+		updateTimeout.purge();
 	}
-	
 	
 	private void setCorrectAns() {
-		this.correctAns  = this.questions.get(this.nQuestion).getCorrect();
+		correctAns  = questions.get(nQuestion).getCorrect();
 	}
 	
-	private void evaluate() {
-		
-		boolean success = this.evaluateAnswer();
-			
-		this.showResult(success);
-		if(success) {
-			this.incScore();
+	private void evaluate() {	
+		boolean success = evaluateAnswer();
+		showResult(success);
+		if (success) {
+			incScore();
 		}
-		this.incQuestionIndex();
+		incQuestionIndex();
 	}
 	
 	private boolean evaluateAnswer() {
-
-		boolean success = this.checkedRadioButton == this.correctAns;
-				
+		boolean success = checkedRadioButton == correctAns;
 		return success;
 	}
 	
 	private void showResult(boolean success) {
+		result = getResult(success);
+		txTime.setVisibility(View.VISIBLE);
+		drawCorrectAnswer(); 
+		txResult.setText(result);
 		
-		this.result = this.getResult(success);
-		
-		this.txTime.setVisibility(View.VISIBLE);
-		this.drawCorrectAnswer(); 
-		this.txResult.setText(this.result);
-		
-		if(success) {
-			this.txResult.setTextColor(Color.GREEN);
+		if (success) {
+			txResult.setTextColor(Color.GREEN);
+		} else {
+			drawWrongAnswer();
+			txResult.setTextColor(Color.RED);
 		}
-		else {
-			this.drawWrongAnswer();
-			this.txResult.setTextColor(Color.RED);
-		}
-		this.animScaleView(this.txResult);
+		animScaleView(txResult);
 	}
 
 	private void animShowQuestionView(View animationTarget) {
-		
 		animationTarget.setVisibility(View.VISIBLE);
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.button_appearance);
 		animationTarget.startAnimation(animation);
 	}
 	
 	private void animHideQuestionView(View animationTarget) {
-		
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.button_disappearance);
 		animationTarget.startAnimation(animation);
 		animationTarget.setVisibility(View.GONE);
 	}
 	
 	private void animScaleView(View animationTarget) {
-		
 		animationTarget.setVisibility(View.VISIBLE);
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.result_animation);
 		animationTarget.startAnimation(animation);
 	}
 	
 	private void animTxTime(TextView animationTarget, int rem) {
-		
 		animationTarget.setText(String.valueOf(rem));
 		//animationTarget.setVisibility(View.VISIBLE);
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.time_animation);
@@ -388,220 +348,199 @@ public class GameActivity extends Activity {
 	}
 
 	private void incScore() {
-		int rem = Integer.parseInt(this.txTime.getText().toString());
-		this.score = this.score + (this.multip * (++ rem));
-		this.updateScore();
+		int rem = Integer.parseInt(txTime.getText().toString());
+		score = score + (multip * (++ rem));
+		updateScore();
 	}
 
 	private void incQuestionIndex() {
-		
-		this.nQuestion ++;
+		nQuestion ++;
 	}
 
 	private String getResult(boolean success) {
-		
-		if(success) {
+		if (success) {
 			return "Richtig!";
-		} 
-		else {
-			if(this.checkedRadioButton == -1) return "Time Out!";
-			else return "Falsch!";
+		} else {
+			if (checkedRadioButton == -1)  {
+				return "Time Out!";
+			} else {
+				return "Falsch!";
+			}
 		}
 	}
 	
-	private void goToNext() {
-				
-		if(this.isEnd()) this.rankingAndClose();
-		else this.launchNextQuestion();	
+	private void goToNext() {	
+		if (isEnd()) {
+			rankingAndClose();
+		} else {
+			launchNextQuestion();	
+		}
 	}
 			
 	private boolean isEnd() {
-	
-		if(this.nQuestion > this.questions.size() - 1) {
-		
-			this.nQuestion = this.questions.size() - 1;
+		if (nQuestion > questions.size() - 1) {
+			nQuestion = questions.size() - 1;
 			return true;			
-		} 
-		else {
+		} else {
 			return false;
 		}
 	}
 	
 	private void rankingAndClose() {
-	
-		String date = this.getDate();
+		String date = getDate();
 		PFRanking.insertIntoRankingGame(this, gameId, name, date, score);
-		this.gameover();
+		gameover();
 	}
 			
 	private void launchNextQuestion() {
-		
-		this.unpressRads();
-		this.unselectRads();
-		this.setButtonsDefaultStyle();
-		this.updateGameStatus();
-		this.restoreTimeRemaining();
-    	this.writeAnswers();
-    	this.showFullQuestion();
-    	this.setEnableAnswers(true);
-    	this.setCalled(false);
-    	this.timerUpdateTimeout();
+		unpressRads();
+		unselectRads();
+		setButtonsDefaultStyle();
+		updateGameStatus();
+		restoreTimeRemaining();
+    	writeAnswers();
+    	showFullQuestion();
+    	setEnableAnswers(true);
+    	setCalled(false);
+    	timerUpdateTimeout();
 	}
 	
 	private void showFullQuestion() {
-		
-		this.timerShowQuestionView(txQuestion, 0);
-		this.timerShowQuestionView(rad0, 100);
-		this.timerShowQuestionView(rad1, 200);
-		this.timerShowQuestionView(rad2, 300);	
+		timerShowQuestionView(txQuestion, 0);
+		timerShowQuestionView(rad0, 100);
+		timerShowQuestionView(rad1, 200);
+		timerShowQuestionView(rad2, 300);	
 	}
 	
 	private void hideFullQuestion() {
-		
-		this.timerHideQuestionView(rad2, 0);
-		this.timerHideQuestionView(rad1, 100);
-		this.timerHideQuestionView(rad0, 200);
-		this.timerHideQuestionView(txQuestion, 300);
+		timerHideQuestionView(rad2, 0);
+		timerHideQuestionView(rad1, 100);
+		timerHideQuestionView(rad0, 200);
+		timerHideQuestionView(txQuestion, 300);
 	}
 		
 	private void unpressRads() {
-		
-		this.rad0.setPressed(false);
-		this.rad1.setPressed(false);
-		this.rad2.setPressed(false);
+		rad0.setPressed(false);
+		rad1.setPressed(false);
+		rad2.setPressed(false);
 	}
 	
 	private void unselectRads() {
-		
-		this.rad0.setSelected(false);
-		this.rad1.setSelected(false);
-		this.rad2.setSelected(false);
-		this.checkedRadioButton = -1;
+		rad0.setSelected(false);
+		rad1.setSelected(false);
+		rad2.setSelected(false);
+		checkedRadioButton = -1;
 	}
 	
 	private int radChecked() {
-		
-		if(this.rad0.isSelected())
+		if (rad0.isSelected()) {
 			return 1;
-		else if(this.rad1.isSelected())
+		} else if(rad1.isSelected()) {
 			return 2;
-		else if(this.rad2.isSelected())
+		} else if(rad2.isSelected()) {
 			return 3;
-		else
+		} else {
 			return -1;
+		}
 	}
 	
 	private void setCalled(boolean value) {
-		this.called = value;
+		called = value;
 	}
 	
 	private void setButtonsDefaultStyle() {
-		
-		this.rad0.setBackgroundResource(R.drawable.button_custom);
-		this.rad1.setBackgroundResource(R.drawable.button_custom);
-		this.rad2.setBackgroundResource(R.drawable.button_custom);
+		rad0.setBackgroundResource(R.drawable.button_custom);
+		rad1.setBackgroundResource(R.drawable.button_custom);
+		rad2.setBackgroundResource(R.drawable.button_custom);
 	}
 		
 	private void updateGameStatus() {
-		
-        this.txNQuestion.setText("Question: "+ (this.nQuestion + 1));
-        this.txQuestion.setText(questions.get(this.nQuestion).getHeading());
+        txNQuestion.setText("Question: "+ (nQuestion + 1));
+        txQuestion.setText(questions.get(nQuestion).getHeading());
 	}
 	
 	private void updateScore() {
-		this.txScore.setText("Score: " + this.score);
+		txScore.setText("Score: " + score);
 	}
 	
 	private void writeAnswers() {
-		
-		String ans1 = this.questions.get(this.nQuestion).getAns1();
-		String ans2 = this.questions.get(this.nQuestion).getAns2();
-		String ans3 = this.questions.get(this.nQuestion).getAns3();
-		
-		this.rad0.setText(ans1);
-		this.rad1.setText(ans2);
-		this.rad2.setText(ans3);
+		String ans1 = questions.get(nQuestion).getAns1();
+		String ans2 = questions.get(nQuestion).getAns2();
+		String ans3 = questions.get(nQuestion).getAns3();
+		rad0.setText(ans1);
+		rad1.setText(ans2);
+		rad2.setText(ans3);
 	}
 	
 	private void restoreTimeRemaining() {
-		this.remainingTime = this.timeOutValue / 1000;
+		remainingTime = timeOutValue / 1000;
 	}
 	
 	private int getBaseTime() {
-		
-		if(this.checkedRadioButton == -1) {
-			return this.baseTimeTimeOut;
-		} 
-		else {
-			return this.baseTimeAnswering;
+		if (checkedRadioButton == -1) {
+			return baseTimeTimeOut;
+		} else {
+			return baseTimeAnswering;
 		}
 	}
 
 	private String getDate() {
-		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.US);
 		return dateFormat.format(new Date()).toString();
 	}
 					
 	private void clearTxResult() {
-		this.txResult.setVisibility(View.GONE);
-		this.txResult.setText("");
+		txResult.setVisibility(View.GONE);
+		txResult.setText("");
 	}
 	
 	private void setEnableAnswers(boolean enabled) {
-		
-		this.rad0.setEnabled(enabled);
-		this.rad1.setEnabled(enabled);
-		this.rad2.setEnabled(enabled);
+		rad0.setEnabled(enabled);
+		rad1.setEnabled(enabled);
+		rad2.setEnabled(enabled);
 	}
 
 	private void setFullQuestionVisibility(int visib) {
-		
-		this.rad0.setVisibility(visib);
-		this.rad1.setVisibility(visib);
-		this.rad2.setVisibility(visib);
+		rad0.setVisibility(visib);
+		rad1.setVisibility(visib);
+		rad2.setVisibility(visib);
 	}
 	
 	private void drawCorrectAnswer() {
-		
-		switch(this.correctAns) {
-			case 1:
-				this.rad0.setBackgroundResource(R.drawable.button_correct);
-				break;
-			case 2:
-				this.rad1.setBackgroundResource(R.drawable.button_correct);
-				break;
-			case 3:
-				this.rad2.setBackgroundResource(R.drawable.button_correct);
-				break;
-			default:
-				throw new Error("Correct answer coherence error");
+		switch (correctAns) {	
+		case 1:	
+			rad0.setBackgroundResource(R.drawable.button_correct);	
+			break;	
+		case 2:	
+			rad1.setBackgroundResource(R.drawable.button_correct);
+			break;
+		case 3:
+			rad2.setBackgroundResource(R.drawable.button_correct);
+			break;
+		default:
+			throw new Error("Correct answer coherence error");
 		}	
 	}
 	
 	private void drawWrongAnswer() {
-	
-		switch(this.checkedRadioButton) {
-			
-			case 1:
-				this.rad0.setBackgroundResource(R.drawable.button_wrong);
-				break;
-			case 2:
-				this.rad1.setBackgroundResource(R.drawable.button_wrong);
-				break;
-			case 3:
-				this.rad2.setBackgroundResource(R.drawable.button_wrong);
-				break;
+		switch (checkedRadioButton) {
+		case 1:
+			rad0.setBackgroundResource(R.drawable.button_wrong);
+			break;
+		case 2:
+			rad1.setBackgroundResource(R.drawable.button_wrong);
+			break;
+		case 3:
+			rad2.setBackgroundResource(R.drawable.button_wrong);
+			break;
 		}
 	}
 	
 	private void gameover() {
-		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(this.result + " Congratulations, test finished!")
+		builder.setMessage(result + " Congratulations, test finished!")
 		.setCancelable(false)
 		.setPositiveButton("Show Ranking", new DialogInterface.OnClickListener() {
-	    	   
 			public void onClick(DialogInterface dialog, int id) {
 				end();
 	        }
@@ -611,24 +550,21 @@ public class GameActivity extends Activity {
 	}
 	
 	private void end() {
-		
 		Intent intent = new Intent(this, RankingActivity.class);
 		startActivity(intent);
-		this.cleanAndExit();
+		cleanAndExit();
 	}
 	
 	private void cleanAndExit() {
-		this.cancelUpdateTime();
+		cancelUpdateTime();
 		GameActivity.this.finish();
 	}
 		
 	private void back() {
-		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("¿Are you sure you want to come back to main menu?")
 		       .setCancelable(false)
 		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		    	   
 		    	   public void onClick(DialogInterface dialog, int id) {
 		        	   cleanAndExit();
 		           }
