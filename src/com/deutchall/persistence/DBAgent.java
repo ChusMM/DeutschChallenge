@@ -23,8 +23,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBAgent extends SQLiteOpenHelper {
 	 
 	public static final String DATABASE_NAME = "DEUTCHA_DB";
-	public static final String DATABASE_PATH = "/data/data/com.deutchall.activities/databases/";
-	public static final String DATABASE_LOCATION  = DATABASE_PATH + DATABASE_NAME ;
 	public static final int DATABASE_VERSION  = 1;
 	
 	public static final String DER_DIE_DAS = "DER_DIE_DAS";
@@ -58,8 +56,8 @@ public class DBAgent extends SQLiteOpenHelper {
 	private static Context context;
 	private SQLiteDatabase sqLiteDatabase;
 	
-	private  DBAgent(Context c) {
-		super(c, DATABASE_NAME, null, DATABASE_VERSION);
+	private  DBAgent(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		try {
 			createDataBase();
 		} catch (IOException e) {
@@ -67,33 +65,30 @@ public class DBAgent extends SQLiteOpenHelper {
 		}
 	}
 	
-	public synchronized static DBAgent getInstance(Context c) {
-		if (instance  != null) {
-			instance = new DBAgent(c );
-		}
-		context = c;
+	public synchronized static DBAgent getInstance(Context context) {
+		//if (instance  != null) {
+			DBAgent.context = context;
+			instance = new DBAgent(context);
+		//}
 		return instance;
 	}
 	
 	private void createDataBase() throws IOException {
-		if (checkDataBase()) {
-			this.getReadableDatabase();
+		if (!checkDataBase()) {
+			getReadableDatabase();
 			copyDataBase() ;
 		}
 	}
 	
     private boolean checkDataBase() {
         boolean checkDB = false;
-        try {
-        	
-        	String myPath = DATABASE_LOCATION;
+        try {	
+        	String myPath = context.getDatabasePath(DATABASE_NAME).getPath();
         	File dbFile = new File(myPath);
         	checkDB = dbFile.exists();	
-        } 
-        catch (SQLiteException e) { 
+        } catch (SQLiteException e) { 
         	throw new SQLiteException();
         }
-        
         return checkDB;
     }
 	
@@ -103,9 +98,9 @@ public class DBAgent extends SQLiteOpenHelper {
     		
     		InputStream input = context.getAssets().open(DATABASE_NAME);
     		
-    		String outPutFileName = DATABASE_LOCATION ;
-    		OutputStream output = new FileOutputStream(outPutFileName); 
-            
+    		String outputFileName = context.getDatabasePath(DATABASE_NAME).getPath();
+    		OutputStream output = new FileOutputStream(outputFileName);
+    		
             while ((length = input.read(buffer)) > 0) {
             	output.write(buffer, 0, length);
             	output.flush();
@@ -115,7 +110,7 @@ public class DBAgent extends SQLiteOpenHelper {
     }
     	
 	private SQLiteDatabase openToRead() throws SQLException {		
-	    sqLiteDatabase = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READONLY);
+	    sqLiteDatabase = SQLiteDatabase.openDatabase(context.getDatabasePath(DATABASE_NAME).getPath(), null, SQLiteDatabase.OPEN_READONLY);
 	    return sqLiteDatabase;
 	}
 	
@@ -144,6 +139,7 @@ public class DBAgent extends SQLiteOpenHelper {
 													  							String groupBy, String having, String orderBy) {
 		Cursor cursor = openToRead().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
 		List<Question> questions = cursorToQuestionList(cursor);
+		cursor.close();
 		close();
 		return questions;
 	}
@@ -170,26 +166,28 @@ public class DBAgent extends SQLiteOpenHelper {
 	
 	private List<User> cursorToUserList(Cursor cursor) {
 		List<User> users = new ArrayList<User>();
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			String name = cursor.getString(cursor.getColumnIndex(USERNAME));
-			String email = cursor.getString(cursor.getColumnIndex(EMAIL));
-			users.add(new User(name, email));
-		}
+		if (cursor.moveToFirst()) {
+			do {
+				String name = cursor.getString(cursor.getColumnIndex(USERNAME));
+				String email = cursor.getString(cursor.getColumnIndex(EMAIL));
+				users.add(new User(name, email));
+			} while(cursor.moveToNext());	
+		} 
 		cursor.close();
 		return users;
 	}
 	
 	private List<Question> cursorToQuestionList(Cursor cursor) {
 		List<Question> questions = new ArrayList<Question>();
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			String heading = cursor.getString(cursor.getColumnIndex(HEADING));
-			String ans1 = cursor.getString(cursor.getColumnIndex(ANS1));
-			String ans2 = cursor.getString(cursor.getColumnIndex(ANS2));
-			String ans3 = cursor.getString(cursor.getColumnIndex(ANS3));
-			int correct = cursor.getInt(cursor.getColumnIndex(CORRECT));
-			questions.add(new Question(heading, ans1, ans2, ans3, correct));
+		if (cursor.moveToFirst()) {
+			do {
+				String heading = cursor.getString(cursor.getColumnIndex(HEADING));
+				String ans1 = cursor.getString(cursor.getColumnIndex(ANS1));
+				String ans2 = cursor.getString(cursor.getColumnIndex(ANS2));
+				String ans3 = cursor.getString(cursor.getColumnIndex(ANS3));
+				int correct = cursor.getInt(cursor.getColumnIndex(CORRECT));
+				questions.add(new Question(heading, ans1, ans2, ans3, correct));
+			} while(cursor.moveToNext());
 		}
 		cursor.close();
 		return questions;
@@ -197,11 +195,12 @@ public class DBAgent extends SQLiteOpenHelper {
 	
 	private List<Ranking> cursorToRankingList(Cursor cursor) {
 		List<Ranking> ranking = new ArrayList<Ranking>();
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			String name = cursor.getString(cursor.getColumnIndex(RANK_NAME));
-			int score = cursor.getInt(cursor.getColumnIndex(SCORE));
-			ranking.add(new Ranking(name, score));
+		if (cursor.moveToFirst()) {
+			do {
+				String name = cursor.getString(cursor.getColumnIndex(RANK_NAME));
+				int score = cursor.getInt(cursor.getColumnIndex(SCORE));
+				ranking.add(new Ranking(name, score));
+			} while(cursor.moveToNext());
 		}
 		cursor.close();
 		return ranking;

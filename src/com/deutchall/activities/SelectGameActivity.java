@@ -1,8 +1,6 @@
 package com.deutchall.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -25,7 +23,6 @@ public class SelectGameActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.selectgame);
 		this.getNameFromIntent();
@@ -38,7 +35,6 @@ public class SelectGameActivity extends Activity {
 	}
 	
 	private void getNameFromIntent() {
-		
 		Intent intent = getIntent();
 		if((this.name = intent.getStringExtra(UserActivity.EXTRA_MESSAGE)) == null) {
 			throw new Error("SelectGameActivity: user name null pointer exception");
@@ -47,7 +43,6 @@ public class SelectGameActivity extends Activity {
 	
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
-		
 		super.onConfigurationChanged(newConfig);	
 		
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
@@ -55,7 +50,6 @@ public class SelectGameActivity extends Activity {
     }
 	
 	public void derdiedas(View view) {
-		
 		this.gameSelected = DBAgent.DERDIEDAS_ID;
 		this.setButtonsDefaultStyle();
 		this.btDDD.setBackgroundResource(R.drawable.button_gamesel_selected);
@@ -63,7 +57,6 @@ public class SelectGameActivity extends Activity {
 	}
 	
 	public void verben(View view) {
-		
 		this.gameSelected = DBAgent.VERBEN_ID;
 		this.setButtonsDefaultStyle();
 		this.btVerb.setBackgroundResource(R.drawable.button_gamesel_selected);
@@ -71,7 +64,6 @@ public class SelectGameActivity extends Activity {
 	}
 	
 	public void gramatik(View view) {
-		
 		this.gameSelected = DBAgent.GRAMATIK_ID;
 		this.setButtonsDefaultStyle();
 		this.btGram.setBackgroundResource(R.drawable.button_gamesel_selected);
@@ -79,7 +71,6 @@ public class SelectGameActivity extends Activity {
 	}
 	
 	private void setButtonsDefaultStyle() {
-		
 		this.btDDD.setBackgroundResource(R.drawable.button_gamesel);
 		this.btVerb.setBackgroundResource(R.drawable.button_gamesel);
 		this.btGram.setBackgroundResource(R.drawable.button_gamesel);
@@ -90,7 +81,6 @@ public class SelectGameActivity extends Activity {
 	}
 		
 	public void play(View view) {
-		
 		String[] args = new String[2];
 		args[0] = this.name;
 		args[1] = String.valueOf(this.gameSelected);
@@ -103,42 +93,18 @@ public class SelectGameActivity extends Activity {
 	}
 	
 	public void backUserSelection(View view) {
-		this.back();
+		this.toUserScreen();
 	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-	    	this.back();
+	    	this.toUserScreen();
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
-
-	private void back() {
-    	
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
-		builder.setMessage("Back to user selection screen?")
-		       .setCancelable(false)
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		    	   
-		    	   public void onClick(DialogInterface dialog, int id) {
-		    		   toScreenUser();
-		           }
-		       })
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		                dialog.cancel();
-		           }
-		       });
-		
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
 	
-	private void toScreenUser() {
-		
+	private void toUserScreen() {
 		Intent intent = new Intent(this, UserActivity.class);
     	startActivity(intent);
 		SelectGameActivity.this.finish();

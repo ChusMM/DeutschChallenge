@@ -2,7 +2,6 @@ package com.deutchall.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,11 +16,14 @@ import com.deutchall.identification.PFUser;
 import com.deutchall.activities.R;
 import com.deutchall.adapters.UserAdapter;
 
-public class UserActivity extends Activity {
+public class UserActivity extends Activity  implements OnItemClickListener {
 	
-	public final static String EXTRA_MESSAGE = "com.deutchall.src.USER";
+	public static final String EXTRA_MESSAGE = "com.deutchall.src.USER";
+	public static final int ANDROID_4 = 4;
 	
+	private boolean created = false;
 	private ListView listView;
+	private TextView selected;
 	private String selectedUser = "";
 	private int androidVersion;
 
@@ -34,45 +36,45 @@ public class UserActivity extends Activity {
         this.androidVersion = Integer.parseInt(android.os.Build.VERSION.RELEASE.substring(0, 1));
         
         this.fillListView();
-        this.setListListener();
+        this.listView.setOnItemClickListener(this);
+        this.created = true;
     }
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		this.selectedUser = "";
-		this.fillListView();
+		if(created) {
+			this.fillListView();
+		}
 	}
 	
 	private void fillListView() {
+		this.selectedUser = "";
 		UserAdapter userAdapter = new UserAdapter(this, PFUser.select(this));
 		this.listView.setFastScrollEnabled(true);
 		listView.setAdapter(userAdapter);
 	}
 	
-	private void setListListener() {
-		
-		this.listView.setOnItemClickListener(new OnItemClickListener () {
-			@Override
-	        public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-				
-				int desiredPos;
-				
-				if (androidVersion >= 4) {
-					desiredPos = pos;
-				} else {
-					int lastPos = parent.getLastVisiblePosition();
-					desiredPos = lastPos - pos;
-				}
-	        	for (int i = 0; i < parent.getChildCount(); i++) {
-	        		parent.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.shadow));
-	        	}
-	        	
-	        	parent.getChildAt(desiredPos).setBackgroundColor(getResources().getColor(R.color.selected));
-	        	TextView usr = (TextView) parent.getItemAtPosition(pos);
-	        	selectedUser = usr.getText().toString();
-	        }
-		});
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+		int desiredPos;
+		if (view.getId() == R.id.txRowUser && parent.getId() == R.id.listUsers) {
+			selected = (TextView) view;
+			listView = (ListView) parent;
+			//selectedUser = selected.getText().toString();
+			if (androidVersion >= ANDROID_4) {
+				desiredPos = pos;
+			} else {
+				int lastPos = parent.getLastVisiblePosition();
+				desiredPos = lastPos - pos;
+			}
+			for (int i = 0; i < parent.getChildCount(); i++) {
+    			listView.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.shadow));
+    		}
+			//selected.setBackgroundColor(getResources().getColor(R.color.selected));
+			((UserAdapter) listView.getAdapter()).getTextView(desiredPos, listView).setBackgroundColor(getResources().getColor(R.color.selected));
+			selected.toString();
+		}
 	}
 	
 	public void menu(View view) {
@@ -80,30 +82,24 @@ public class UserActivity extends Activity {
 	}
 	
 	public void newProfile(View view) {
-		
 		Intent intent = new Intent(this, RegisterActivity.class);
 		startActivity(intent);
 		super.onPause();
 	}
 	
 	public void next(View view) {
-		
 		if(this.selectedUser.length() > 0) {
-			
 			Intent intent = new Intent(this, SelectGameActivity.class);
 			intent.putExtra(EXTRA_MESSAGE, this.selectedUser);
 	    	startActivity(intent);
-	    	
 	    	this.terminate();
-		}
-		else {
+		} else {
 			this.alertMsg("Please, select an existing profile from the list");
 		}
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 	    	this.back();
 	    }
@@ -112,38 +108,17 @@ public class UserActivity extends Activity {
 
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
-		
 		super.onConfigurationChanged(newConfig);
 		
-		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
-		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
+		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {} 
+		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {} 
     }
 	
 	private void back() {
-    	
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
-		builder.setMessage("Back to main menu?")
-		       .setCancelable(false)
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		    	   
-		    	   public void onClick(DialogInterface dialog, int id) {
-		    		   terminate();
-		           }
-		       })
-		       
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		                dialog.cancel();
-		           }
-		       });
-		
-		AlertDialog alert = builder.create();
-		alert.show();
+		this.terminate();
 	}
 	
 	private void alertMsg(String msg) {
-		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Attention");
         builder.setMessage(msg);

@@ -32,4 +32,8 @@ public class UserAdapter extends ArrayAdapter<User> {
     	txRowUser.setText(users.get(position).getName());
     	return rowView;
     }
+    
+    public TextView getTextView(int position, ViewGroup parent) {
+    	.getView(position, null, parent).setBackgroundColor(context.getResources().getColor(R.color.selected));
+    }
 }
