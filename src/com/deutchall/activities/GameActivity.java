@@ -98,7 +98,6 @@ public class GameActivity extends Activity {
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) { } 
 		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
     }

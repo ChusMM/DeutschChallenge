@@ -20,13 +20,11 @@ public class MainActivity extends Activity {
     }
     
     public void start(View view) {
-    	
     	Intent intent = new Intent(this, UserActivity.class);
     	startActivity(intent);
     }
     
     public void showRanking(View view) {
-    	
     	Intent intent = new Intent(this, RankingActivity.class);
 		startActivity(intent);
     }
