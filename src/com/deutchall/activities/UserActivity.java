@@ -1,10 +1,14 @@
 package com.deutchall.activities;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
@@ -15,6 +19,7 @@ import com.deutchall.adapters.UserAdapter;
 public class UserActivity extends Activity {
 	
 	public static final String USER = "user";
+	public static final String TAG = "com.deutchall.activities.UserActivity";
 	
 	private boolean created = false;
 	private ListView listView;
@@ -53,7 +58,16 @@ public class UserActivity extends Activity {
 	}
 	
 	private void fillListView() {
-		userAdapter = new UserAdapter(this, PFUser.select(this));
+		try {
+			userAdapter = new UserAdapter(this, PFUser.select(this));
+		} catch (SQLiteException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		} catch (IndexOutOfBoundsException e) {
+			Log.e(TAG, e.toString());
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+		}
 		userAdapter.setSelected(null);
 		listView.setFastScrollEnabled(true);
 		listView.setAdapter(userAdapter);

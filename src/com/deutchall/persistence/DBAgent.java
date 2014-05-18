@@ -56,7 +56,7 @@ public class DBAgent extends SQLiteOpenHelper {
 	private static Context context;
 	private SQLiteDatabase sqLiteDatabase;
 	
-	private  DBAgent(Context context) {
+	private  DBAgent(Context context) throws SQLiteException, IOException, IndexOutOfBoundsException {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		try {
 			createDataBase();
@@ -65,15 +65,15 @@ public class DBAgent extends SQLiteOpenHelper {
 		}
 	}
 	
-	public synchronized static DBAgent getInstance(Context context) {
+	public synchronized static DBAgent getInstance(Context context) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		//if (instance  != null) {
-			DBAgent.context = context;
-			instance = new DBAgent(context);
+		DBAgent.context = context;
+		instance = new DBAgent(context);
 		//}
 		return instance;
 	}
 	
-	private void createDataBase() throws IOException {
+	private void createDataBase() throws SQLiteException, IOException, IndexOutOfBoundsException {
 		if (!checkDataBase()) {
 			getReadableDatabase();
 			copyDataBase() ;
@@ -81,18 +81,11 @@ public class DBAgent extends SQLiteOpenHelper {
 	}
 	
     private boolean checkDataBase() {
-        boolean checkDB = false;
-        try {	
-        	String myPath = context.getDatabasePath(DATABASE_NAME).getPath();
-        	File dbFile = new File(myPath);
-        	checkDB = dbFile.exists();	
-        } catch (SQLiteException e) { 
-        	throw new SQLiteException();
-        }
-        return checkDB;
+        String myPath = context.getDatabasePath(DATABASE_NAME).getPath();
+        return new File(myPath).exists();
     }
 	
-    private void copyDataBase() throws IOException{
+    private void copyDataBase() throws IOException, IndexOutOfBoundsException {
     		int length;
     		byte[] buffer = new byte[1024];
     		
@@ -109,18 +102,18 @@ public class DBAgent extends SQLiteOpenHelper {
             input.close();
     }
     	
-	private SQLiteDatabase openToRead() throws SQLException {		
+	private SQLiteDatabase openToRead() throws SQLiteException {		
 	    sqLiteDatabase = SQLiteDatabase.openDatabase(context.getDatabasePath(DATABASE_NAME).getPath(), null, SQLiteDatabase.OPEN_READONLY);
 	    return sqLiteDatabase;
 	}
 	
-	private SQLiteDatabase openToWrite() throws SQLException {
+	private SQLiteDatabase openToWrite() throws SQLiteException {
 		sqLiteDatabase = this.getWritableDatabase();
 		return sqLiteDatabase;
 	}
 	
 	@Override
-	public void close() throws SQLiteException {
+	public void close() {
 		if (sqLiteDatabase != null) {
 			 sqLiteDatabase.close();
 		}
@@ -128,7 +121,7 @@ public class DBAgent extends SQLiteOpenHelper {
 	}
 	
 	public List<User> selectUser(String[] columns, String selection, String[] selectionArgs, 
-													  		 String groupBy, String having, String orderBy) {
+													  		 String groupBy, String having, String orderBy) throws SQLiteException {
 		Cursor cursor = openToRead().query(USERS, columns, selection, selectionArgs, groupBy, having, orderBy);
 		List<User> users = cursorToUserList(cursor);
 		close();
@@ -136,7 +129,7 @@ public class DBAgent extends SQLiteOpenHelper {
 	}
 	
 	public List<Question> selectQuestion(String table, String[] columns, String selection, String[] selectionArgs, 
-													  							String groupBy, String having, String orderBy) {
+													  							String groupBy, String having, String orderBy) throws SQLiteException{
 		Cursor cursor = openToRead().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
 		List<Question> questions = cursorToQuestionList(cursor);
 		cursor.close();
@@ -145,20 +138,20 @@ public class DBAgent extends SQLiteOpenHelper {
 	}
 	
 	public List<Ranking> selectRanking(String table, String[] columns, String selection, String[] selectionArgs, 
-																			String groupBy, String having, String orderBy) {
+																			String groupBy, String having, String orderBy)  throws SQLiteException {
 		Cursor cursor = openToRead().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
 		List<Ranking> ranking = cursorToRankingList(cursor);
 		close();
 		return ranking;
 	}
 	
-	public long insert(String table, ContentValues contentValues) {
+	public long insert(String table, ContentValues contentValues)  throws SQLiteException {
 		long rowsAffected = openToWrite().insert(table, null, contentValues);
 		close();
 		return rowsAffected;
 	}
 	
-	public long delete(String table, String whereClause, String[] whereArgs) {
+	public long delete(String table, String whereClause, String[] whereArgs) throws SQLiteException {
 		long rowsAffected = openToWrite().delete(table, whereClause, whereArgs);
 		close();
 		return rowsAffected;

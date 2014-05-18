@@ -1,5 +1,6 @@
 package com.deutchall.activities;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,8 +22,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -33,6 +36,7 @@ import android.view.animation.AnimationUtils;
 
 public class GameActivity extends Activity {
 	
+	public static final String TAG = "com.deutchall.activities.GameActivity";
 	private final int timeOutValue = 5000;
 	private final int second = 1000;
 	private final int baseTimeAnswering = 700;
@@ -75,7 +79,18 @@ public class GameActivity extends Activity {
      
         name = getIntent().getStringExtra(UserActivity.USER);
         gameId = getIntent().getIntExtra(SelectGameActivity.GAME, -1);
-        questions = PFQuestion.getGameQuestions(this, gameId);
+        try {
+			questions = PFQuestion.getGameQuestions(this, gameId);
+		} catch (SQLiteException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		} catch (IndexOutOfBoundsException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		}
         
         txName = (TextView)findViewById(R.id.txName);
         txScore = (TextView)findViewById(R.id.txScore);
@@ -386,9 +401,20 @@ public class GameActivity extends Activity {
 	}
 	
 	private void rankingAndClose() {
-		String date = getDate();
-		PFRanking.insertIntoRankingGame(this, gameId, name, date, score);
-		gameover();
+		try {
+			String date = getDate();
+			PFRanking.insertIntoRankingGame(this, gameId, name, date, score);
+			gameover();
+		} catch (SQLiteException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		} catch (IndexOutOfBoundsException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		}
 	}
 			
 	private void launchNextQuestion() {
@@ -536,16 +562,8 @@ public class GameActivity extends Activity {
 	}
 	
 	private void gameover() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(result + " Congratulations, test finished!")
-		.setCancelable(false)
-		.setPositiveButton("Show Ranking", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				end();
-	        }
-	    });
-		AlertDialog alert = builder.create();
-		alert.show();
+		alertDialog(result, "Congratulations, test finished!", "Show Ranking");
+		end();
 	}
 	
 	private void end() {
@@ -577,4 +595,13 @@ public class GameActivity extends Activity {
 		AlertDialog alert = builder.create();
 		alert.show();
     }
+	
+	private void alertDialog(String title, String msg, String buttonTag) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(buttonTag, null);
+        builder.create();
+        builder.show();
+	}
 }

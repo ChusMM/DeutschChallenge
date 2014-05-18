@@ -1,15 +1,17 @@
 package com.deutchall.identification;
 
+import java.io.IOException;
 import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 
 import com.deutchall.persistence.DBAgent;
 
 public class PFRanking {
 	
-	public static List<Ranking> getRanking(Context context, int idGame) {
+	public static List<Ranking> getRanking(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		switch(idGame) {
 		case DBAgent.DERDIEDAS_ID:
 			return select(context, DBAgent.DDD_RANK);
@@ -22,14 +24,13 @@ public class PFRanking {
 		}
 	}
 	
-	private static List<Ranking> select(Context context, String rankingTable) {
+	private static List<Ranking> select(Context context, String rankingTable) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		String[] columns = new String[] {DBAgent.KEY_RANK, DBAgent.RANK_NAME, DBAgent.SCORE};
-		
 		List<Ranking> ranking = DBAgent.getInstance(context).selectRanking(rankingTable, columns, null, null, null, null, DBAgent.SCORE + " DESC");
 		return ranking;
 	}
 	
-	public static void insertIntoRankingGame(Context context, int idGame, String name, String date, int score) {
+	public static void insertIntoRankingGame(Context context, int idGame, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		switch(idGame) {
 		case DBAgent.DERDIEDAS_ID:
 			insert(context, DBAgent.DDD_RANK, name, date, score);
@@ -45,14 +46,14 @@ public class PFRanking {
 		}
 	}
 	
-	private static void insert(Context context, String rankingTable, String name, String date, int score) {
+	private static void insert(Context context, String rankingTable, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DBAgent.RANK_NAME, name + " - " + date);
 		contentValues.put(DBAgent.SCORE, score);
 		DBAgent.getInstance(context).insert(rankingTable, contentValues);
 	}
 	
-	public static void deleteRankingGame(Context context, int idGame) {
+	public static void deleteRankingGame(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		switch(idGame) {
 		case DBAgent.DERDIEDAS_ID:
 			delete(context, DBAgent.DDD_RANK);
@@ -68,7 +69,7 @@ public class PFRanking {
 		}
 	}
 	
-	private static void delete(Context context, String rankingTable) {
+	private static void delete(Context context, String rankingTable) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		DBAgent.getInstance(context).delete(rankingTable, null, null);
 	}
 }

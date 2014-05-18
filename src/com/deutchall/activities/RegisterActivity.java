@@ -1,18 +1,23 @@
 package com.deutchall.activities;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.deutchall.exceptions.ExistingUserException;
 import com.deutchall.identification.PFUser;
 
 public class RegisterActivity extends Activity {
 	
-	public final static String EXTRA_MESSAGE = "com.deutchall.src.REGISTER";
+	public static final String TAG = "com.deutchall.RegisterActivity";
 	
 	private final String SUBJECT = "Deutsch Challenge application registration";
 	private final String MESSAGE_BODY = "Welcome to Deutsch Challenge.\nThank you for registering in german learning app!\n" +
@@ -46,19 +51,29 @@ public class RegisterActivity extends Activity {
 	    return super.onKeyDown(keyCode, event);
 	}
 		
-	public void register(View view) {
+	public void register(View view)  {
 		boolean checkPointOk = false;
-		
 		String user = txUser.getText().toString();
 		String email = txEmail.getText().toString();
 			
-		checkPointOk = this.checkFields(user, this.txEmail.getText()) & !this.existingEmail(email);
-		if (checkPointOk) {
-			com.deutchall.utilities.MailSender sender = new com.deutchall.utilities.MailSender(email, "123", this);
-			sender.sendMail(SUBJECT, MESSAGE_BODY, "noreply@deutschallenge.com", email);
+		try {
+			checkPointOk = this.checkFields(user, this.txEmail.getText()) & !this.existingEmail(email);
+			if (checkPointOk) {
+				com.deutchall.utilities.MailSender sender = new com.deutchall.utilities.MailSender(email, "123", this);
+				sender.sendMail(SUBJECT, MESSAGE_BODY, "noreply@deutschallenge.com", email);
 			
-			PFUser.insert(this, user, email);
-			this.terminate();		
+				PFUser.insert(this, user, email);
+				this.terminate();		
+			}
+		} catch (SQLiteException e) {
+			Log.e(TAG, e.toString());
+		} catch (IndexOutOfBoundsException e) {
+			Log.e(TAG, e.toString());
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		} catch (ExistingUserException e) {
+			Log.e(TAG, e.toString());
 		}
 	}
 	
@@ -78,7 +93,7 @@ public class RegisterActivity extends Activity {
 		}
 	}
 	
-	private boolean existingEmail(String email) {
+	private boolean existingEmail(String email) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		if (PFUser.existsEmail(this, email)) {
 			alertMsg("E-Mail " + email + " already exists");
 			return true;

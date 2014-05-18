@@ -1,10 +1,14 @@
 package com.deutchall.activities;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
@@ -16,6 +20,7 @@ import com.deutchall.adapters.RankingAdapter;
 
 public class RankingActivity extends Activity {
 
+	private static final String TAG = "com.deutchall.activities.RankingActivity";
 	private ListView listView;
 	private boolean created  = false;
 	
@@ -37,17 +42,22 @@ public class RankingActivity extends Activity {
 	}
 	
 	private void fillListView() {
-        RankingAdapter rankingAdapter = new RankingAdapter(this, PFRanking.getRanking(this, DBAgent.DERDIEDAS_ID));
-		listView.setFastScrollEnabled(true);
-		listView.setAdapter(rankingAdapter);
+        RankingAdapter rankingAdapter;
+		try {
+			rankingAdapter = new RankingAdapter(this, PFRanking.getRanking(this, DBAgent.DERDIEDAS_ID));
+			listView.setFastScrollEnabled(true);
+			listView.setAdapter(rankingAdapter);
+		} catch (SQLiteException e) {
+			Log.e(TAG, e.toString());
+		} catch (IndexOutOfBoundsException e) {
+			Log.e(TAG, e.toString());
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+		}
 	}
 	
 	public void menu(View view) {
 		terminate();
-	}
-	
-	public void clear(View view) {
-		clearConfRequest();
 	}
 	 
 	@Override
@@ -65,12 +75,11 @@ public class RankingActivity extends Activity {
 	    return super.onKeyDown(keyCode, event);
 	}
 	
-	private void clearConfRequest() {
+	public void clear(View view)  {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Do you really want to clear all ranking registers?")
 		       .setCancelable(false)
 		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		    	   
 		    	   public void onClick(DialogInterface dialog, int id) {
 		    		   onClear();
 		           }
@@ -95,9 +104,17 @@ public class RankingActivity extends Activity {
 	}
 
 	private void onClear() {
-		fillListView();
-		PFRanking.deleteRankingGame(this, DBAgent.DERDIEDAS_ID);
-		alertMsg("Ranking cleared");
+		try {
+			PFRanking.deleteRankingGame(this, DBAgent.DERDIEDAS_ID);
+			alertMsg("Ranking cleared");
+			fillListView();
+		} catch (SQLiteException e) {
+			Log.e(TAG, e.toString());
+		} catch (IndexOutOfBoundsException e) {
+			Log.e(TAG, e.toString());
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+		}
 	}
 	
 	private void terminate() {
