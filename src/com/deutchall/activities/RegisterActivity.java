@@ -3,7 +3,6 @@ package com.deutchall.activities;
 import java.io.IOException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deutchall.exceptions.ExistingUserException;
 import com.deutchall.identification.PFUser;
@@ -83,10 +83,10 @@ public class RegisterActivity extends Activity {
 	
 	private boolean checkFields(String user, CharSequence email) {
 		if (user.length() == 0) {
-			alertMsg("Please, enter an username");
+			toastMsg("Please, enter an username");
 			return false;
 		} else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-			alertMsg("Please, enter a valid email address");
+			toastMsg("Please, enter a valid email address");
 			return false;
 		} else {
 			return true;
@@ -95,20 +95,15 @@ public class RegisterActivity extends Activity {
 	
 	private boolean existingEmail(String email) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		if (PFUser.existsEmail(this, email)) {
-			alertMsg("E-Mail " + email + " already exists");
+			toastMsg("E-Mail " + email + " already exists");
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private void alertMsg(String msg) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Attention!");
-        builder.setMessage(msg);
-        builder.setPositiveButton("OK", null);
-        builder.create();
-        builder.show();
+	private void toastMsg(String msg) {
+		Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
 	}
 	
 	private void terminate() {

@@ -2,15 +2,21 @@ package com.deutchall.identification;
 
 public class Ranking {
 	String name;
+	String date;
 	int score;
 	
-	public Ranking(String name, int score) {
+	public Ranking(String name, String date, int score) {
 		this.name = name;
+		this.date =date;
 		this.score = score;
 	}
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public String getDate() {
+		return this.date;
 	}
 	
 	public int getScore() {
@@ -19,6 +25,10 @@ public class Ranking {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
 	public void setScore(int score) {

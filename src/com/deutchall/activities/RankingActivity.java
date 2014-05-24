@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.deutchall.identification.PFRanking;
-import com.deutchall.persistence.DBAgent;
 import com.deutchall.activities.R;
 import com.deutchall.adapters.RankingAdapter;
 
@@ -22,12 +21,14 @@ public class RankingActivity extends Activity {
 
 	private static final String TAG = "com.deutchall.activities.RankingActivity";
 	private ListView listView;
+	private int gameId;
 	private boolean created  = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ranking);
+        this.gameId = getIntent().getIntExtra(SelectGameActivity.GAME, -1);
         this.listView = (ListView)findViewById(R.id.contentlist);
         this.created = true;
         fillListView();
@@ -44,7 +45,7 @@ public class RankingActivity extends Activity {
 	private void fillListView() {
         RankingAdapter rankingAdapter;
 		try {
-			rankingAdapter = new RankingAdapter(this, PFRanking.getRanking(this, DBAgent.DERDIEDAS_ID));
+			rankingAdapter = new RankingAdapter(this, PFRanking.getRanking(this, gameId));
 			listView.setFastScrollEnabled(true);
 			listView.setAdapter(rankingAdapter);
 		} catch (SQLiteException e) {
@@ -105,7 +106,7 @@ public class RankingActivity extends Activity {
 
 	private void onClear() {
 		try {
-			PFRanking.deleteRankingGame(this, DBAgent.DERDIEDAS_ID);
+			PFRanking.deleteRankingGame(this, gameId);
 			alertMsg("Ranking cleared");
 			fillListView();
 		} catch (SQLiteException e) {

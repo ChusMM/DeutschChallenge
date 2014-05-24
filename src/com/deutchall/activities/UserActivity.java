@@ -3,7 +3,6 @@ package com.deutchall.activities;
 import java.io.IOException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
@@ -12,6 +11,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.deutchall.identification.PFUser;
 import com.deutchall.adapters.UserAdapter;
@@ -92,17 +92,12 @@ public class UserActivity extends Activity {
 	    	startActivity(intent);
 	    	this.terminate();
 		} else {
-			this.alertMsg("Please, select an existing profile from the list");
+			this.toastMsg("Please, select an existing profile from the list");
 		}
 	}
 	
-	private void alertMsg(String msg) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Attention");
-        builder.setMessage(msg);
-        builder.setPositiveButton("OK", null);
-        builder.create();
-        builder.show();
+	private void toastMsg(String msg) {
+		Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
 	}
 	
 	private void terminate() {

@@ -5,7 +5,7 @@
     android:background="#80000000" >
 
     <TextView
-        android:id="@+id/txUID"
+        android:id="@+id/txUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
@@ -16,6 +16,13 @@
         android:text="@string/titulo"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/txDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/txScore"

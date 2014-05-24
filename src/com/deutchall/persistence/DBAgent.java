@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.deutchall.identification.Question;
@@ -21,43 +20,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBAgent extends SQLiteOpenHelper {
-	 
-	public static final String DATABASE_NAME = "DEUTCHA_DB";
-	public static final int DATABASE_VERSION  = 1;
-	
-	public static final String DER_DIE_DAS = "DER_DIE_DAS";
-	public static final String VERBEN      = "VERBEN";
-	public static final String GRAMATIK    = "GRAMATIK";
-	public static final String DDD_RANK    = "DDD_RANK";
-	public static final String VERB_RANK   = "VERB_RANK";
-	public static final String GRAM_RANK   = "GRAM_RANK";
-	public static final String USERS       = "USERS";
-	
-	public static final String QUESTION_KEY   = "_id";
-	public static final String HEADING = "QUESTION";
-	public static final String ANS1     = "ANS1";
-	public static final String ANS2     = "ANS2";
-	public static final String ANS3     = "ANS3";
-	public static final String CORRECT  = "CORRECT";
-	
-	public static final String KEY_USER = "_id";
-	public static final String USERNAME = "USERNAME";
-	public static final String EMAIL    = "EMAIL";
-	
-	public static final String KEY_RANK = "_id";
-	public static final String RANK_NAME      = "UID";
-	public static final String SCORE    = "SCORE";
-	
-	public static final int DERDIEDAS_ID = 0;
-	public static final int VERBEN_ID = 1;
-	public static final int GRAMATIK_ID = 2;
 	
 	private static DBAgent instance = null;
 	private static Context context;
 	private SQLiteDatabase sqLiteDatabase;
 	
 	private  DBAgent(Context context) throws SQLiteException, IOException, IndexOutOfBoundsException {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, Sql.DATABASE_NAME, null, Sql.DATABASE_VERSION);
 		try {
 			createDataBase();
 		} catch (IOException e) {
@@ -81,7 +50,7 @@ public class DBAgent extends SQLiteOpenHelper {
 	}
 	
     private boolean checkDataBase() {
-        String myPath = context.getDatabasePath(DATABASE_NAME).getPath();
+        String myPath = context.getDatabasePath(Sql.DATABASE_NAME).getPath();
         return new File(myPath).exists();
     }
 	
@@ -89,9 +58,9 @@ public class DBAgent extends SQLiteOpenHelper {
     		int length;
     		byte[] buffer = new byte[1024];
     		
-    		InputStream input = context.getAssets().open(DATABASE_NAME);
+    		InputStream input = context.getAssets().open(Sql.DATABASE_NAME);
     		
-    		String outputFileName = context.getDatabasePath(DATABASE_NAME).getPath();
+    		String outputFileName = context.getDatabasePath(Sql.DATABASE_NAME).getPath();
     		OutputStream output = new FileOutputStream(outputFileName);
     		
             while ((length = input.read(buffer)) > 0) {
@@ -103,7 +72,7 @@ public class DBAgent extends SQLiteOpenHelper {
     }
     	
 	private SQLiteDatabase openToRead() throws SQLiteException {		
-	    sqLiteDatabase = SQLiteDatabase.openDatabase(context.getDatabasePath(DATABASE_NAME).getPath(), null, SQLiteDatabase.OPEN_READONLY);
+	    sqLiteDatabase = SQLiteDatabase.openDatabase(context.getDatabasePath(Sql.DATABASE_NAME).getPath(), null, SQLiteDatabase.OPEN_READONLY);
 	    return sqLiteDatabase;
 	}
 	
@@ -122,8 +91,8 @@ public class DBAgent extends SQLiteOpenHelper {
 	
 	public List<User> selectUser(String[] columns, String selection, String[] selectionArgs, 
 													  		 String groupBy, String having, String orderBy) throws SQLiteException {
-		Cursor cursor = openToRead().query(USERS, columns, selection, selectionArgs, groupBy, having, orderBy);
-		List<User> users = cursorToUserList(cursor);
+		Cursor cursor = openToRead().query(Sql.USERS, columns, selection, selectionArgs, groupBy, having, orderBy);
+		List<User> users = CursorFactory.cursorToUserList(cursor);
 		close();
 		return users;
 	}
@@ -131,7 +100,7 @@ public class DBAgent extends SQLiteOpenHelper {
 	public List<Question> selectQuestion(String table, String[] columns, String selection, String[] selectionArgs, 
 													  							String groupBy, String having, String orderBy) throws SQLiteException{
 		Cursor cursor = openToRead().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
-		List<Question> questions = cursorToQuestionList(cursor);
+		List<Question> questions = CursorFactory.cursorToQuestionList(cursor);
 		cursor.close();
 		close();
 		return questions;
@@ -140,7 +109,7 @@ public class DBAgent extends SQLiteOpenHelper {
 	public List<Ranking> selectRanking(String table, String[] columns, String selection, String[] selectionArgs, 
 																			String groupBy, String having, String orderBy)  throws SQLiteException {
 		Cursor cursor = openToRead().query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
-		List<Ranking> ranking = cursorToRankingList(cursor);
+		List<Ranking> ranking = CursorFactory.cursorToRankingList(cursor);
 		close();
 		return ranking;
 	}
@@ -155,48 +124,6 @@ public class DBAgent extends SQLiteOpenHelper {
 		long rowsAffected = openToWrite().delete(table, whereClause, whereArgs);
 		close();
 		return rowsAffected;
-	}
-	
-	private List<User> cursorToUserList(Cursor cursor) {
-		List<User> users = new ArrayList<User>();
-		if (cursor.moveToFirst()) {
-			do {
-				String name = cursor.getString(cursor.getColumnIndex(USERNAME));
-				String email = cursor.getString(cursor.getColumnIndex(EMAIL));
-				users.add(new User(name, email));
-			} while(cursor.moveToNext());	
-		} 
-		cursor.close();
-		return users;
-	}
-	
-	private List<Question> cursorToQuestionList(Cursor cursor) {
-		List<Question> questions = new ArrayList<Question>();
-		if (cursor.moveToFirst()) {
-			do {
-				String heading = cursor.getString(cursor.getColumnIndex(HEADING));
-				String ans1 = cursor.getString(cursor.getColumnIndex(ANS1));
-				String ans2 = cursor.getString(cursor.getColumnIndex(ANS2));
-				String ans3 = cursor.getString(cursor.getColumnIndex(ANS3));
-				int correct = cursor.getInt(cursor.getColumnIndex(CORRECT));
-				questions.add(new Question(heading, ans1, ans2, ans3, correct));
-			} while(cursor.moveToNext());
-		}
-		cursor.close();
-		return questions;
-	}
-	
-	private List<Ranking> cursorToRankingList(Cursor cursor) {
-		List<Ranking> ranking = new ArrayList<Ranking>();
-		if (cursor.moveToFirst()) {
-			do {
-				String name = cursor.getString(cursor.getColumnIndex(RANK_NAME));
-				int score = cursor.getInt(cursor.getColumnIndex(SCORE));
-				ranking.add(new Ranking(name, score));
-			} while(cursor.moveToNext());
-		}
-		cursor.close();
-		return ranking;
 	}
 	
 	public void onCreate(SQLiteDatabase db) throws SQLException {

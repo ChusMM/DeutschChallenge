@@ -30,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
 import android.graphics.Color;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -562,12 +563,13 @@ public class GameActivity extends Activity {
 	}
 	
 	private void gameover() {
-		alertDialog(result, "Congratulations, test finished!", "Show Ranking");
+		toastMsg(result + " Congratulations, test finished!" + Finals.newLine + "Let's see your Ranking position...");
 		end();
 	}
 	
 	private void end() {
 		Intent intent = new Intent(this, RankingActivity.class);
+		intent.putExtra(SelectGameActivity.GAME, gameId);
 		startActivity(intent);
 		cleanAndExit();
 	}
@@ -596,12 +598,7 @@ public class GameActivity extends Activity {
 		alert.show();
     }
 	
-	private void alertDialog(String title, String msg, String buttonTag) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(msg);
-        builder.setPositiveButton(buttonTag, null);
-        builder.create();
-        builder.show();
+	private void toastMsg(String msg) {
+		Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
 	}
 }

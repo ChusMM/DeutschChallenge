@@ -8,7 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
-import com.deutchall.persistence.DBAgent;
+import com.deutchall.persistence.Sql;
 
 public class SelectGameActivity extends Activity {
 
@@ -48,21 +48,21 @@ public class SelectGameActivity extends Activity {
 	}
 	
 	public void derdiedas(View view) {
-		this.gameSelected = DBAgent.DERDIEDAS_ID;
+		this.gameSelected = Sql.DERDIEDAS_ID;
 		this.setButtonsDefaultStyle();
 		this.btDDD.setBackgroundResource(R.drawable.button_gamesel_selected);
 		this.btDDD.setTextColor(getResources().getColor(R.color.white));
 	}
 	
 	public void verben(View view) {
-		this.gameSelected = DBAgent.VERBEN_ID;
+		this.gameSelected =Sql.VERBEN_ID;
 		this.setButtonsDefaultStyle();
 		this.btVerb.setBackgroundResource(R.drawable.button_gamesel_selected);
 		this.btVerb.setTextColor(getResources().getColor(R.color.white));
 	}
 	
 	public void gramatik(View view) {
-		this.gameSelected = DBAgent.GRAMATIK_ID;
+		this.gameSelected =Sql.GRAMATIK_ID;
 		this.setButtonsDefaultStyle();
 		this.btGram.setBackgroundResource(R.drawable.button_gamesel_selected);
 		this.btGram.setTextColor(getResources().getColor(R.color.white));

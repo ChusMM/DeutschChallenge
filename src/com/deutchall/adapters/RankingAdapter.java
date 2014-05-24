@@ -28,10 +28,12 @@ public class RankingAdapter extends ArrayAdapter<Ranking> {
     	LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	View rowView = inflater.inflate(R.layout.rowrank, parent, false);
     	
-    	TextView txUID = (TextView) rowView.findViewById(R.id.txUID);
+    	TextView txUser = (TextView) rowView.findViewById(R.id.txUser);
+    	TextView txDate = (TextView) rowView.findViewById(R.id.txDate);
     	TextView txScore = (TextView) rowView.findViewById(R.id.txScore);
     	
-    	txUID.setText(ranking.get(position).getName());
+    	txUser.setText(ranking.get(position).getName());
+    	txDate.setText(ranking.get(position).getDate());
     	txScore.setText(String.valueOf(ranking.get(position).getScore()));
     	return rowView;
     }
