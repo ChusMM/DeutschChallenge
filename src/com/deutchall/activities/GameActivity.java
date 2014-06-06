@@ -43,6 +43,8 @@ public class GameActivity extends Activity {
 	private final int baseTimeAnswering = 700;
 	private final int baseTimeTimeOut = 0;
 	private final int multip = 10;
+	private final int afterEvalTimeout = 1000;
+	private final int goToNextTimeout = afterEvalTimeout + 600;
 	
 	private String name = null;
 	private int gameId;
@@ -161,7 +163,8 @@ public class GameActivity extends Activity {
     }
 			
 	private void launchUpdateTimeout() {
-		RemainingTimeHandler.post(updateTimeoutRunnable);
+		UpdateTimeoutRunnable utr = new UpdateTimeoutRunnable();
+		RemainingTimeHandler.post(utr);
 	}
 	
 	private void launchCheckAnswer() {
@@ -169,7 +172,8 @@ public class GameActivity extends Activity {
 		try {
 			if (!called) {
 				setCalled(true);
-				timeOutHandler.post(checkAnswerRunnable);
+				CheckAnswerRunnable car = new CheckAnswerRunnable();
+				timeOutHandler.post(car);
 			}
 		} finally {
 			lock.unlock();
@@ -177,15 +181,18 @@ public class GameActivity extends Activity {
 	}
 	
 	private void launchEval() {
-		timeHandler.post(evalRunnable);
+		EvalRunnable evar = new EvalRunnable();
+		timeHandler.post(evar);
 	}
 	
 	private void launchHide() {
-		timeHandler.post(hideButtonsRunnable);
+		HideButtonsRunnable hbr = new HideButtonsRunnable();
+		timeHandler.post(hbr);
 	}
 	
 	private void launchGoToNext() {
-		timeHandler.post(nextRunnable);
+		NextRunnable nr = new NextRunnable();
+		timeHandler.post(nr);
 	}
 		
 	private void launchShowQuestionView(View view) {
@@ -198,7 +205,7 @@ public class GameActivity extends Activity {
 		animTimeHandler.post(hideRunnable);
 	}
 	
-	final Runnable updateTimeoutRunnable = new Runnable() {
+	private class UpdateTimeoutRunnable implements Runnable {
 		public void run() {
 			txTime.setVisibility(View.GONE);
 			if (remainingTime >= 0) {
@@ -215,27 +222,27 @@ public class GameActivity extends Activity {
 		}
 	};
 	
-	final Runnable evalRunnable = new Runnable() {
+	private class  EvalRunnable implements Runnable {
 		public void run() {
 			evaluate();
 		}
 	};
 	
-	final Runnable checkAnswerRunnable = new Runnable() {
+	private class CheckAnswerRunnable implements  Runnable {
 		public void run() {
 			setCorrectAns();
 			timerEvaluationSequence();
 		}
 	};
 
-	final Runnable hideButtonsRunnable = new Runnable() {
+	private class HideButtonsRunnable implements Runnable {
 		public void run() {
 			clearTxResult();
 			hideFullQuestion();
 		}
 	};
 	
-	final Runnable nextRunnable = new Runnable() {
+	private class NextRunnable implements Runnable {
 		public void run() {
 			goToNext();
 		}
@@ -243,7 +250,7 @@ public class GameActivity extends Activity {
 
 	private class ShowQuestionViewRunnable implements Runnable {
 		View view;
-		public ShowQuestionViewRunnable(View view) {this.view = view; }
+		public ShowQuestionViewRunnable(View view) { this.view = view; }
 		public void run() {
 			animShowQuestionView(view);
 		}
@@ -251,7 +258,7 @@ public class GameActivity extends Activity {
 	
 	private class HideQuestionViewRunnable implements Runnable {
 		View view;
-		public HideQuestionViewRunnable(View view) {this.view = view; }
+		public HideQuestionViewRunnable(View view) { this.view = view; }
 		public void run() {
 			animHideQuestionView(view);
 		}
@@ -259,45 +266,79 @@ public class GameActivity extends Activity {
 	
 	private void timerUpdateTimeout() {
 		updateTimeout = new Timer();
-		updateTimeout.schedule(new TimerTask() {
-			@Override
-			public void run () {
-				launchUpdateTimeout();
-			}
-		}, 0, second);
+		UpdateTimeoutTask utt = new UpdateTimeoutTask();
+		updateTimeout.schedule(utt, 0, second);
+	}
+	
+	private class UpdateTimeoutTask extends TimerTask {
+		@Override
+		public void run() {
+			launchUpdateTimeout();
+		}
 	}
 	
 	private void timerShowQuestionView(final View view, int miliseconds) {
 		Timer showTimer = new Timer();
-		showTimer.schedule(new TimerTask() {
-			@Override
-			public void run() { launchShowQuestionView(view); } 
-		}, miliseconds);		
+		ShowQuestionTask sqt = new ShowQuestionTask(view);
+		showTimer.schedule(sqt, miliseconds);
+	}
+	
+	private class ShowQuestionTask extends TimerTask {
+		private View view;
+		public ShowQuestionTask(View view) { this.view = view; }
+		@Override
+		public void run() {
+			launchShowQuestionView(view);
+		}
 	}
 	
 	private void timerHideQuestionView(final View view, int miliseconds) {
-		Timer showTimer = new Timer();
-		showTimer.schedule(new TimerTask() {
-			@Override
-			public void run() { launchHideQuestionView(view); } 
-		}, miliseconds);		
+		Timer hideTimer = new Timer();
+		HideQuestionTask hqt = new HideQuestionTask(view);
+		hideTimer.schedule(hqt, miliseconds);
+	}
+	
+	private class HideQuestionTask extends TimerTask {
+		private View view;
+		public HideQuestionTask(View view) { this.view = view; }
+		@Override
+		public void run() {
+			launchHideQuestionView(view);
+		}
 	}
 
 	private void timerEvaluationSequence() {
 		Timer ansTimer = new Timer();
 		int baseTime = getBaseTime();
-		ansTimer.schedule(new TimerTask() {
-			@Override
-			public void run() { launchEval(); } 
-		}, baseTime);
-		ansTimer.schedule(new TimerTask() {
-			@Override
-			public void run() { launchHide(); } 
-		}, baseTime + 1000);
-		ansTimer.schedule(new TimerTask() {
-			@Override
-			public void run() { launchGoToNext(); } 
-		}, baseTime + 1600);
+		
+		EvaluationTask evt = new EvaluationTask();
+		HideControlsTask hct = new HideControlsTask();
+		GoToNextTask gnt = new GoToNextTask();
+		
+		ansTimer.schedule(evt, baseTime);
+		ansTimer.schedule(hct, baseTime + afterEvalTimeout);
+		ansTimer.schedule(gnt, baseTime +goToNextTimeout );
+	}
+	
+	private class EvaluationTask extends TimerTask {
+		@Override
+		public void run() {
+			launchEval();
+		}
+	}
+	
+	private class HideControlsTask extends TimerTask {
+		@Override
+		public void run() {
+			launchHide();
+		}
+	}
+	
+	private class GoToNextTask extends TimerTask {
+		@Override
+		public void run() {
+			launchGoToNext();
+		}
 	}
 		
 	private void cancelUpdateTime() {
