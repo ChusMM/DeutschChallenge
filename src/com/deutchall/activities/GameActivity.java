@@ -80,6 +80,7 @@ public class GameActivity extends Activity {
      
         name = getIntent().getStringExtra(UserActivity.USER);
         gameId = getIntent().getIntExtra(SelectGameActivity.GAME, -1);
+        
         try {
 			questions = PFQuestion.getGameQuestions(this, gameId);
 		} catch (SQLiteException e) {

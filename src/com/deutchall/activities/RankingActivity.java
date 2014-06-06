@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.deutchall.identification.PFRanking;
+import com.deutchall.persistence.Sql;
 import com.deutchall.activities.R;
 import com.deutchall.adapters.RankingAdapter;
 
@@ -28,7 +29,9 @@ public class RankingActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ranking);
-        this.gameId = getIntent().getIntExtra(SelectGameActivity.GAME, -1);
+        if ((this.gameId = getIntent().getIntExtra(SelectGameActivity.GAME, -1)) == -1) {
+        	this.gameId = Sql.DERDIEDAS_ID;
+        }
         this.listView = (ListView)findViewById(R.id.contentlist);
         this.created = true;
         fillListView();

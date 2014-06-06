@@ -31,5 +31,4 @@ public class Sql {
 	public static final int DERDIEDAS_ID = 0;
 	public static final int VERBEN_ID = 1;
 	public static final int GRAMATIK_ID = 2;
-
 }
