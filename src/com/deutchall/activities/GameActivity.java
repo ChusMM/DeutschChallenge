@@ -38,7 +38,7 @@ import android.view.animation.AnimationUtils;
 public class GameActivity extends Activity {
 	
 	public static final String TAG = "com.deutchall.activities.GameActivity";
-	private final int timeOutValue = 5000;
+	private final int timeOutValue = 8000;
 	private final int second = 1000;
 	private final int baseTimeAnswering = 700;
 	private final int baseTimeTimeOut = 0;
@@ -113,6 +113,16 @@ public class GameActivity extends Activity {
         updateScore();
         launchNextQuestion();
     }
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
 	
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -317,7 +327,7 @@ public class GameActivity extends Activity {
 		
 		ansTimer.schedule(evt, baseTime);
 		ansTimer.schedule(hct, baseTime + afterEvalTimeout);
-		ansTimer.schedule(gnt, baseTime +goToNextTimeout );
+		ansTimer.schedule(gnt, baseTime + goToNextTimeout );
 	}
 	
 	private class EvaluationTask extends TimerTask {
