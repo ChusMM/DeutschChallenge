@@ -1,15 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/forest" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/forest">
 
+    <RelativeLayout
+        android:id="@+id/relativeTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+        
+    	<TabHost
+        	android:id="@android:id/tabhost"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:layout_alignParentTop="true" >
+        	
+        	<LinearLayout
+            	android:id="@+id/linearTab"
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:orientation="vertical" >
+
+            	<TabWidget
+            	    android:id="@android:id/tabs"
+            	    android:layout_width="match_parent"
+            	    android:layout_height="wrap_content"
+            	    android:background="@color/shadow"
+            	    android:scrollbars="none"
+            	    android:visibility="visible" >
+
+            	</TabWidget>
+            	<FrameLayout
+                	android:id="@android:id/tabcontent"
+                	android:layout_width="match_parent"
+                	android:layout_height="match_parent" >
+                	<LinearLayout
+                    	android:id="@+id/ddd_tab"
+                    	android:layout_width="match_parent"
+                    	android:layout_height="match_parent"
+                    	android:orientation="vertical" >
+
+                		<TextView
+                		    android:id="@+id/textView1"
+                		    android:layout_width="wrap_content"
+                		    android:layout_height="wrap_content"
+                		    android:text="Large Text"
+                		    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                	</LinearLayout>
+                	<LinearLayout
+                    	android:id="@+id/verb_tab"
+                    	android:layout_width="match_parent"
+                    	android:layout_height="match_parent"
+                    	android:orientation="vertical" >
+
+                		<TextView
+                		    android:id="@+id/textView2"
+                		    android:layout_width="wrap_content"
+                		    android:layout_height="wrap_content"
+                		    android:text="Large Text"
+                		    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                	</LinearLayout>
+                	<LinearLayout
+                    	android:id="@+id/gram_tab"
+                    	android:layout_width="match_parent"
+                    	android:layout_height="match_parent"
+                    	android:orientation="vertical" >
+
+                		<TextView
+                		    android:id="@+id/textView3"
+                		    android:layout_width="wrap_content"
+                		    android:layout_height="wrap_content"
+                		    android:text="Large Text"
+                		    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                	</LinearLayout>
+            	</FrameLayout>
+        	</LinearLayout>
+    	</TabHost>
+    </RelativeLayout>
     <TextView
         android:id="@+id/txRankUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeTab"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:text="@string/fullname_en"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black" />
@@ -18,8 +97,8 @@
         android:id="@+id/txRankScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeTab"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:text="@string/score_en"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black" />
@@ -30,7 +109,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/btBack"
         android:layout_below="@+id/txRankUser" >
-
         <ListView
             android:id="@+id/contentlist"
             android:layout_width="match_parent"
@@ -57,5 +135,5 @@
         android:layout_alignParentRight="true"
         android:onClick="clear"
         android:text="@string/clearrank_en" />
-
+    
 </RelativeLayout>
