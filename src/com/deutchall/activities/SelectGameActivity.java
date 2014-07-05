@@ -27,7 +27,7 @@ public class SelectGameActivity extends Activity {
 		setContentView(R.layout.selectgame);
 		this.getNameFromIntent();
 		
-		this.btDDD = (Button)findViewById(R.id.btDDD);
+		this.btDDD = (Button)findViewById(R.id.bt_ddd);
 		this.btVerb = (Button)findViewById(R.id.btVerb);
 		this.btGram = (Button)findViewById(R.id.btGram);
 		this.setButtonsDefaultStyle();

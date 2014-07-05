@@ -58,7 +58,7 @@
         android:text="@string/gramatik" />
 
     <Button
-        android:id="@+id/btDDD"
+        android:id="@+id/bt_ddd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btVerb"

@@ -2,120 +2,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/forest">
+    android:background="@drawable/forest" >
 
-    <RelativeLayout
-        android:id="@+id/relativeTab"
+    <TableRow
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
-        
-    	<TabHost
-        	android:id="@android:id/tabhost"
-        	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:layout_alignParentLeft="true"
-        	android:layout_alignParentTop="true" >
-        	
-        	<LinearLayout
-            	android:id="@+id/linearTab"
-            	android:layout_width="match_parent"
-            	android:layout_height="wrap_content"
-            	android:orientation="vertical" >
+        android:weightSum="90" >
 
-            	<TabWidget
-            	    android:id="@android:id/tabs"
-            	    android:layout_width="match_parent"
-            	    android:layout_height="wrap_content"
-            	    android:background="@color/shadow"
-            	    android:scrollbars="none"
-            	    android:visibility="visible" >
+        <Button
+            android:id="@+id/bt_ddd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/derdiedas" />
 
-            	</TabWidget>
-            	<FrameLayout
-                	android:id="@android:id/tabcontent"
-                	android:layout_width="match_parent"
-                	android:layout_height="match_parent" >
-                	<LinearLayout
-                    	android:id="@+id/ddd_tab"
-                    	android:layout_width="match_parent"
-                    	android:layout_height="match_parent"
-                    	android:orientation="vertical" >
+        <Button
+            android:id="@+id/bt_verb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/verben" />
 
-                		<TextView
-                		    android:id="@+id/textView1"
-                		    android:layout_width="wrap_content"
-                		    android:layout_height="wrap_content"
-                		    android:text="Large Text"
-                		    android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Button
+            android:id="@+id/bt_gram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/gramatik" />
 
-                	</LinearLayout>
-                	<LinearLayout
-                    	android:id="@+id/verb_tab"
-                    	android:layout_width="match_parent"
-                    	android:layout_height="match_parent"
-                    	android:orientation="vertical" >
+    </TableRow>
 
-                		<TextView
-                		    android:id="@+id/textView2"
-                		    android:layout_width="wrap_content"
-                		    android:layout_height="wrap_content"
-                		    android:text="Large Text"
-                		    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                	</LinearLayout>
-                	<LinearLayout
-                    	android:id="@+id/gram_tab"
-                    	android:layout_width="match_parent"
-                    	android:layout_height="match_parent"
-                    	android:orientation="vertical" >
-
-                		<TextView
-                		    android:id="@+id/textView3"
-                		    android:layout_width="wrap_content"
-                		    android:layout_height="wrap_content"
-                		    android:text="Large Text"
-                		    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                	</LinearLayout>
-            	</FrameLayout>
-        	</LinearLayout>
-    	</TabHost>
-    </RelativeLayout>
-    <TextView
-        android:id="@+id/txRankUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeTab"
-        android:layout_alignParentLeft="true"
-        android:text="@string/fullname_en"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/txRankScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeTab"
-        android:layout_alignParentRight="true"
-        android:text="@string/score_en"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/black" />
-    
     <RelativeLayout
         android:id="@+id/relativeList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btBack"
         android:layout_below="@+id/txRankUser" >
+
         <ListView
             android:id="@+id/contentlist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
             android:background="#00000000"
             android:cacheColorHint="#00000000" >
-        </ListView>        
+
+        </ListView>
     </RelativeLayout>
 
     <Button
@@ -135,5 +68,25 @@
         android:layout_alignParentRight="true"
         android:onClick="clear"
         android:text="@string/clearrank_en" />
-    
+
+    <TextView
+        android:id="@+id/txRankUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tabs"
+        android:text="@string/fullname_en"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txRankScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tabs"
+        android:text="@string/score_en"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black" />
+
 </RelativeLayout>

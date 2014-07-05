@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.deutchall.identification.PFRanking;
@@ -18,7 +20,7 @@ import com.deutchall.persistence.Sql;
 import com.deutchall.activities.R;
 import com.deutchall.adapters.RankingAdapter;
 
-public class RankingActivity extends Activity {
+public class RankingActivity extends Activity implements OnClickListener {
 
 	private static final String TAG = "com.deutchall.activities.RankingActivity";
 	private ListView listView;
@@ -34,6 +36,9 @@ public class RankingActivity extends Activity {
         }
         this.listView = (ListView)findViewById(R.id.contentlist);
         this.created = true;
+        ((Button) findViewById(R.id.bt_ddd)).setOnClickListener(this);
+        ((Button) findViewById(R.id.bt_verb)).setOnClickListener(this);
+        ((Button) findViewById(R.id.bt_gram)).setOnClickListener(this);
         fillListView();
     }
 
@@ -74,9 +79,27 @@ public class RankingActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-	    	terminate();;
+	    	terminate();
 	    }
 	    return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	public void onClick(View view) {
+		switch(view.getId()) {
+		case R.id.bt_ddd:
+			gameId = Sql.DERDIEDAS_ID;
+			break;
+		case R.id.bt_verb:
+			gameId = Sql.VERBEN_ID;
+			break;
+		case R.id.bt_gram:
+			gameId = Sql.GRAMATIK_ID;
+			break;
+		default:
+			return;
+		}
+		fillListView();
 	}
 	
 	public void clear(View view)  {
