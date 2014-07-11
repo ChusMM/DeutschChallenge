@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.deutchall.exceptions.InvalidGameIdException;
 import com.deutchall.identification.PFRanking;
 import com.deutchall.persistence.Sql;
 import com.deutchall.activities.R;
@@ -141,6 +142,8 @@ public class RankingActivity extends Activity implements OnClickListener {
 			Log.e(TAG, e.toString());
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
+		} catch (InvalidGameIdException e) {
+			Log.e(TAG,e.toString());
 		}
 	}
 	

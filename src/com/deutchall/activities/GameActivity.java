@@ -11,6 +11,7 @@ import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.deutchall.exceptions.InvalidGameIdException;
 import com.deutchall.identification.PFQuestion;
 import com.deutchall.identification.PFRanking;
 import com.deutchall.identification.Question;
@@ -92,6 +93,9 @@ public class GameActivity extends Activity {
 			Log.e(TAG, e.toString());
 			cleanAndExit();
 		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		} catch (InvalidGameIdException e) {
 			Log.e(TAG, e.toString());
 			cleanAndExit();
 		}
@@ -465,6 +469,9 @@ public class GameActivity extends Activity {
 			Log.e(TAG, e.toString());
 			cleanAndExit();
 		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit();
+		} catch (InvalidGameIdException e) {
 			Log.e(TAG, e.toString());
 			cleanAndExit();
 		}

@@ -6,12 +6,13 @@ import android.database.sqlite.SQLiteException;
 import java.io.IOException;
 import java.util.List;
 
+import com.deutchall.exceptions.InvalidGameIdException;
 import com.deutchall.persistence.DBAgent;
 import com.deutchall.persistence.Sql;
 
 public class PFQuestion {
 	
-	public static List<Question> getGameQuestions(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException {
+	public static List<Question> getGameQuestions(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException, InvalidGameIdException {
 		switch(idGame) {
 		case Sql.DERDIEDAS_ID:
 			return select(context, Sql.DER_DIE_DAS);
@@ -20,7 +21,7 @@ public class PFQuestion {
 		case Sql.GRAMATIK_ID:
 			return select(context, Sql.GRAMATIK);
 		default:
-			throw new Error("GameActivity: invalid game identificator");
+			throw new InvalidGameIdException();
 		}
 	}
 	

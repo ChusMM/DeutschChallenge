@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 
+import com.deutchall.exceptions.InvalidGameIdException;
 import com.deutchall.persistence.DBAgent;
 import com.deutchall.persistence.Sql;
 
@@ -31,7 +32,7 @@ public class PFRanking {
 		return ranking;
 	}
 	
-	public static void insertIntoRankingGame(Context context, int idGame, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException {
+	public static void insertIntoRankingGame(Context context, int idGame, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException, InvalidGameIdException {
 		switch(idGame) {
 		case Sql.DERDIEDAS_ID:
 			insert(context, Sql.DDD_RANK, name, date, score);
@@ -43,7 +44,7 @@ public class PFRanking {
 			insert(context, Sql.GRAM_RANK, name, date, score);
 			break;
 		default:
-			throw new Error("GameActivity: invalid game identificator");
+			throw new InvalidGameIdException();
 		}
 	}
 	
@@ -55,19 +56,19 @@ public class PFRanking {
 		DBAgent.getInstance(context).insert(rankingTable, contentValues);
 	}
 	
-	public static void deleteRankingGame(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException {
+	public static void deleteRankingGame(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException, InvalidGameIdException {
 		switch(idGame) {
 		case Sql.DERDIEDAS_ID:
 			delete(context, Sql.DDD_RANK);
 			break;
 		case Sql.VERBEN_ID:
-			delete(context, Sql.VERBEN);
+			delete(context, Sql.VERB_RANK);
 			break;
 		case Sql.GRAMATIK_ID:
 			delete(context, Sql.GRAM_RANK);
 			break;
 		default:
-			throw new Error("GameActivity: invalid game identificator");
+			throw new InvalidGameIdException();
 		}
 	}
 	
