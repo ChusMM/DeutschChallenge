@@ -1,6 +1,8 @@
 package com.deutchall.activities;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,10 +10,13 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -27,6 +32,8 @@ public class RankingActivity extends Activity implements OnClickListener {
 	private ListView listView;
 	private int gameId;
 	private boolean created  = false;
+	Timer animTimer = new Timer();
+	private final Handler timeHandler = new Handler();
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,7 @@ public class RankingActivity extends Activity implements OnClickListener {
 			rankingAdapter = new RankingAdapter(this, PFRanking.getRanking(this, gameId));
 			listView.setFastScrollEnabled(true);
 			listView.setAdapter(rankingAdapter);
+			showList(listView);
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
 		} catch (IndexOutOfBoundsException e) {
@@ -100,7 +108,59 @@ public class RankingActivity extends Activity implements OnClickListener {
 		default:
 			return;
 		}
-		fillListView();
+		
+		ShowAnimationTask sat = new ShowAnimationTask();
+		listView.setVisibility(View.GONE);
+		animTimer.schedule(sat, 0);
+	}
+	
+	private class HideAnimationTask extends TimerTask {
+		@Override
+		public void run() {
+			hide();
+		}
+	}
+	
+	private void hide() {
+		HideRunnable hr = new HideRunnable();
+		timeHandler.post(hr);
+	}
+	
+	private class  HideRunnable implements Runnable {
+		public void run() {
+			hideList(listView);
+		}
+	};
+	
+	private class ShowAnimationTask extends TimerTask {
+		@Override
+		public void run() {
+			show();
+		}
+	}
+	
+	private void show() {
+		ShowRunnable sr = new ShowRunnable();
+		timeHandler.post(sr);
+	}
+	
+	private class  ShowRunnable implements Runnable {
+		public void run() {
+			listView.setVisibility(View.GONE);
+			fillListView();
+			showList(listView);
+		}
+	};
+	
+	private void hideList(View animationTarget) {
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.rank_list_hide);
+		animationTarget.startAnimation(animation);
+	}
+	
+	private void showList(View animationTarget) {
+		animationTarget.setVisibility(View.VISIBLE);
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.rank_list_show);
+		animationTarget.startAnimation(animation);
 	}
 	
 	public void clear(View view)  {
