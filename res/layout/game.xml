@@ -120,7 +120,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/question_en"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/question_size" />
 
         <Button

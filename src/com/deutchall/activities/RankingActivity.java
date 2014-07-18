@@ -44,17 +44,19 @@ public class RankingActivity extends Activity implements OnClickListener {
         	this.gameId = Sql.DERDIEDAS_ID;
         }
         this.listView = (ListView)findViewById(R.id.contentlist);
-        this.created = true;
         ((Button) findViewById(R.id.bt_ddd)).setOnClickListener(this);
         ((Button) findViewById(R.id.bt_verb)).setOnClickListener(this);
         ((Button) findViewById(R.id.bt_gram)).setOnClickListener(this);
+        selectRanking(this.gameId);
         fillListView();
+        this.created = true;
     }
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		if(created) {
+			selectRanking(this.gameId);
 			fillListView();
 		}
 	}
@@ -102,7 +104,8 @@ public class RankingActivity extends Activity implements OnClickListener {
 	
 	@Override
 	public void onClick(View view) {
-		switch(view.getId()) {
+		int id = view.getId();
+		switch(id) {
 		case R.id.bt_ddd:
 			gameId = Sql.DERDIEDAS_ID;
 			break;
@@ -115,10 +118,41 @@ public class RankingActivity extends Activity implements OnClickListener {
 		default:
 			return;
 		}
-		
+		selectRanking(gameId);
 		ShowAnimationTask sat = new ShowAnimationTask();
 		listView.setVisibility(View.GONE);
 		animTimer.schedule(sat, 0);
+	}
+
+	private void selectRanking(int gameId) {
+		int id;
+		switch(gameId) {
+		case Sql.DERDIEDAS_ID:
+			id = R.id.bt_ddd;
+			break;
+		case Sql.VERBEN_ID:
+			id = R.id.bt_verb;
+			break;
+		case Sql.GRAMATIK_ID:
+			id = R.id.bt_gram;
+			break;
+		default:
+			ErrorLauncher.throwError("Game id not handled");
+			return;
+		}
+		setButtonsDefaultStyle();
+		((Button) findViewById(id)).setBackgroundResource(R.drawable.button_gamesel_selected);
+		((Button) findViewById(id)).setTextColor(getResources().getColor(R.color.white));
+	}
+	
+	private void setButtonsDefaultStyle() {
+		((Button) findViewById(R.id.bt_ddd)).setBackgroundResource(R.drawable.button_gamesel);
+		((Button) findViewById(R.id.bt_verb)).setBackgroundResource(R.drawable.button_gamesel);
+		((Button) findViewById(R.id.bt_gram)).setBackgroundResource(R.drawable.button_gamesel);
+	
+		((Button) findViewById(R.id.bt_ddd)).setTextColor(getResources().getColor(R.color.black));
+		((Button) findViewById(R.id.bt_verb)).setTextColor(getResources().getColor(R.color.black));
+		((Button) findViewById(R.id.bt_gram)).setTextColor(getResources().getColor(R.color.black));
 	}
 	
 	/* private class HideAnimationTask extends TimerTask {
