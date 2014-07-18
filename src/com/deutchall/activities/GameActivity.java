@@ -88,16 +88,19 @@ public class GameActivity extends Activity {
 			questions = PFQuestion.getGameQuestions(this, gameId);
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
 		} catch (InvalidGameIdException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit(true);
 		}
         
         txName = (TextView)findViewById(R.id.txName);
@@ -464,16 +467,19 @@ public class GameActivity extends Activity {
 			gameover();
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
 		} catch (InvalidGameIdException e) {
 			Log.e(TAG, e.toString());
-			cleanAndExit();
+			cleanAndExit(true);
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+			cleanAndExit(true);
 		}
 	}
 			
@@ -630,11 +636,14 @@ public class GameActivity extends Activity {
 		Intent intent = new Intent(this, RankingActivity.class);
 		intent.putExtra(SelectGameActivity.GAME, gameId);
 		startActivity(intent);
-		cleanAndExit();
+		cleanAndExit(false);
 	}
 	
-	private void cleanAndExit() {
+	private void cleanAndExit(boolean error) {
 		cancelUpdateTime();
+		if(error) {
+			throw new Error("Exception caugth at runningtime");
+		}
 		GameActivity.this.finish();
 	}
 		
@@ -644,7 +653,7 @@ public class GameActivity extends Activity {
 		       .setCancelable(false)
 		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 		    	   public void onClick(DialogInterface dialog, int id) {
-		        	   cleanAndExit();
+		        	   cleanAndExit(false);
 		           }
 		       })
 		       .setNegativeButton("No", new DialogInterface.OnClickListener() {

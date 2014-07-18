@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.deutchall.exceptions.InvalidGameIdException;
+import com.deutchall.identification.ErrorLauncher;
 import com.deutchall.identification.PFRanking;
 import com.deutchall.persistence.Sql;
 import com.deutchall.activities.R;
@@ -67,10 +68,16 @@ public class RankingActivity extends Activity implements OnClickListener {
 			showList(listView);
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		}
 	}
 	
@@ -198,12 +205,19 @@ public class RankingActivity extends Activity implements OnClickListener {
 			fillListView();
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (InvalidGameIdException e) {
 			Log.e(TAG,e.toString());
+			ErrorLauncher.throwError(e.toString());
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		}
 	}
 	

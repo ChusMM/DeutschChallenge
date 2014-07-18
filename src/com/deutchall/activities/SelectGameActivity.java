@@ -74,7 +74,6 @@ public class SelectGameActivity extends Activity implements OnClickListener {
 		intent.putExtra(UserActivity.USER, name);
 		intent.putExtra(GAME, gameSelected);
     	startActivity(intent);
-    	
     	SelectGameActivity.this.finish();
 	}
 	

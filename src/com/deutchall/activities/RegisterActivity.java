@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deutchall.exceptions.ExistingUserException;
+import com.deutchall.identification.ErrorLauncher;
 import com.deutchall.identification.PFUser;
 
 public class RegisterActivity extends Activity {
@@ -25,7 +26,7 @@ public class RegisterActivity extends Activity {
 									      "We strongly recommend you read our privacy policy along with the using terms and conditions";	
 	private TextView txUser;
 	private TextView txEmail;
-	
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +68,19 @@ public class RegisterActivity extends Activity {
 			}
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
-			e.printStackTrace();
+			ErrorLauncher.throwError(e.toString());
 		} catch (ExistingUserException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		}
 	}
 	

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.deutchall.identification.ErrorLauncher;
 import com.deutchall.identification.PFUser;
 import com.deutchall.adapters.UserAdapter;
 
@@ -62,11 +63,16 @@ public class UserActivity extends Activity {
 			userAdapter = new UserAdapter(this, PFUser.select(this));
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
-			e.printStackTrace();
+			ErrorLauncher.throwError(e.toString());
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
 		}
 		userAdapter.setSelected(null);
 		listView.setFastScrollEnabled(true);
