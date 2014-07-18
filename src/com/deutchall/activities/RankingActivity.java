@@ -114,7 +114,7 @@ public class RankingActivity extends Activity implements OnClickListener {
 		animTimer.schedule(sat, 0);
 	}
 	
-	private class HideAnimationTask extends TimerTask {
+	/* private class HideAnimationTask extends TimerTask {
 		@Override
 		public void run() {
 			hide();
@@ -130,7 +130,7 @@ public class RankingActivity extends Activity implements OnClickListener {
 		public void run() {
 			hideList(listView);
 		}
-	};
+	}; */
 	
 	private class ShowAnimationTask extends TimerTask {
 		@Override
@@ -152,10 +152,10 @@ public class RankingActivity extends Activity implements OnClickListener {
 		}
 	};
 	
-	private void hideList(View animationTarget) {
+	/*private void hideList(View animationTarget) {
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.rank_list_hide);
 		animationTarget.startAnimation(animation);
-	}
+	}*/
 	
 	private void showList(View animationTarget) {
 		animationTarget.setVisibility(View.VISIBLE);

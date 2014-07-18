@@ -57,11 +57,12 @@ public final class R {
     }
     public static final class id {
         public static final int RelativeLayout=0x7f0a001f;
-        public static final int btAdd=0x7f0a0030;
+        public static final int btAdd=0x7f0a0031;
         public static final int btBack=0x7f0a001a;
         public static final int btClear=0x7f0a001d;
+        public static final int btDdd=0x7f0a002d;
         public static final int btExit=0x7f0a0011;
-        public static final int btGo=0x7f0a002f;
+        public static final int btGo=0x7f0a0030;
         public static final int btGram=0x7f0a002c;
         public static final int btMenu=0x7f0a000c;
         public static final int btMute=0x7f0a0012;
@@ -79,8 +80,8 @@ public final class R {
         public static final int lbName=0x7f0a0025;
         public static final int lbPrivacy=0x7f0a0021;
         public static final int lbTerms=0x7f0a0020;
-        public static final int listUsers=0x7f0a002e;
-        public static final int menu_settings=0x7f0a0031;
+        public static final int listUsers=0x7f0a002f;
+        public static final int menu_settings=0x7f0a0032;
         public static final int radio0=0x7f0a000e;
         public static final int radio1=0x7f0a000f;
         public static final int radio2=0x7f0a000b;
@@ -104,7 +105,7 @@ public final class R {
         public static final int txSelect=0x7f0a0029;
         public static final int txTime=0x7f0a0007;
         public static final int txUser=0x7f0a0027;
-        public static final int txUserInf=0x7f0a002d;
+        public static final int txUserInf=0x7f0a002e;
         public static final int userNameRow=0x7f0a0005;
     }
     public static final class integer {

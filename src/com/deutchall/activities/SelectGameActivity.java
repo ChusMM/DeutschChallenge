@@ -6,31 +6,29 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.deutchall.persistence.Sql;
 
-public class SelectGameActivity extends Activity {
-
+public class SelectGameActivity extends Activity implements OnClickListener {
+	private static final String TAG = "SelectGameActivity";
+	
 	private String name = null;
-	private int gameSelected;
-	
-	private Button btDDD;
-	private Button btVerb;
-	private Button btGram;
-	
+	private int gameSelected;	
 	public final static String GAME = "game";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.selectgame);
-		this.getNameFromIntent();
-		
-		this.btDDD = (Button)findViewById(R.id.bt_ddd);
-		this.btVerb = (Button)findViewById(R.id.btVerb);
-		this.btGram = (Button)findViewById(R.id.btGram);
-		this.setButtonsDefaultStyle();
+		if((this.name = getIntent().getStringExtra(UserActivity.USER)) == null) {
+			throw new Error(TAG + ": user name not received from intent");
+		}
+		((Button) findViewById(R.id.btDdd)).setOnClickListener(this);
+		((Button) findViewById(R.id.btVerb)).setOnClickListener(this);
+		((Button) findViewById(R.id.btGram)).setOnClickListener(this);
+		setButtonsDefaultStyle();
 	}
 	
 	@Override
@@ -40,42 +38,35 @@ public class SelectGameActivity extends Activity {
 		else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) { }
     }
 	
-	private void getNameFromIntent() {
-		Intent intent = getIntent();
-		if((this.name = intent.getStringExtra(UserActivity.USER)) == null) {
-			throw new Error("SelectGameActivity: user name null pointer exception");
+	@Override
+	public void onClick(View view) {
+		int id = view.getId();
+		switch(id) {
+		case R.id.btDdd:
+			gameSelected = Sql.DERDIEDAS_ID;
+			break;
+		case R.id.btVerb:
+			gameSelected = Sql.VERBEN_ID;
+			break;
+		case R.id.btGram:
+			gameSelected = Sql.GRAMATIK_ID;
+			break;
+		default:
+			return;
 		}
-	}
-	
-	public void derdiedas(View view) {
-		this.gameSelected = Sql.DERDIEDAS_ID;
-		this.setButtonsDefaultStyle();
-		this.btDDD.setBackgroundResource(R.drawable.button_gamesel_selected);
-		this.btDDD.setTextColor(getResources().getColor(R.color.white));
-	}
-	
-	public void verben(View view) {
-		this.gameSelected =Sql.VERBEN_ID;
-		this.setButtonsDefaultStyle();
-		this.btVerb.setBackgroundResource(R.drawable.button_gamesel_selected);
-		this.btVerb.setTextColor(getResources().getColor(R.color.white));
-	}
-	
-	public void gramatik(View view) {
-		this.gameSelected =Sql.GRAMATIK_ID;
-		this.setButtonsDefaultStyle();
-		this.btGram.setBackgroundResource(R.drawable.button_gamesel_selected);
-		this.btGram.setTextColor(getResources().getColor(R.color.white));
+		setButtonsDefaultStyle();
+		((Button) findViewById(id)).setBackgroundResource(R.drawable.button_gamesel_selected);
+		((Button) findViewById(id)).setTextColor(getResources().getColor(R.color.white));
 	}
 	
 	private void setButtonsDefaultStyle() {
-		this.btDDD.setBackgroundResource(R.drawable.button_gamesel);
-		this.btVerb.setBackgroundResource(R.drawable.button_gamesel);
-		this.btGram.setBackgroundResource(R.drawable.button_gamesel);
+		((Button) findViewById(R.id.btDdd)).setBackgroundResource(R.drawable.button_gamesel);
+		((Button) findViewById(R.id.btVerb)).setBackgroundResource(R.drawable.button_gamesel);
+		((Button) findViewById(R.id.btGram)).setBackgroundResource(R.drawable.button_gamesel);
 		
-		this.btDDD.setTextColor(getResources().getColor(R.color.black));
-		this.btVerb.setTextColor(getResources().getColor(R.color.black));
-		this.btGram.setTextColor(getResources().getColor(R.color.black));
+		((Button) findViewById(R.id.btDdd)).setTextColor(getResources().getColor(R.color.black));
+		((Button) findViewById(R.id.btVerb)).setTextColor(getResources().getColor(R.color.black));
+		((Button) findViewById(R.id.btGram)).setTextColor(getResources().getColor(R.color.black));
 	}
 		
 	public void play(View view) {

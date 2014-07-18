@@ -43,7 +43,6 @@
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/btPlay"
         android:layout_toRightOf="@+id/btBack"
-        android:onClick="verben"
         android:text="@string/verben" />
 
     <Button
@@ -54,17 +53,15 @@
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/btPlay"
         android:layout_toRightOf="@+id/btBack"
-        android:onClick="gramatik"
         android:text="@string/gramatik" />
 
     <Button
-        android:id="@+id/bt_ddd"
+        android:id="@+id/btDdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btVerb"
         android:layout_toLeftOf="@+id/btPlay"
         android:layout_toRightOf="@+id/btBack"
-        android:onClick="derdiedas"
         android:text="@string/derdiedas" />
 
 </RelativeLayout>
