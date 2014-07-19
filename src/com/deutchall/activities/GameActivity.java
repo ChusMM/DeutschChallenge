@@ -12,6 +12,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.deutchall.exceptions.InvalidGameIdException;
+import com.deutchall.identification.ErrorLauncher;
 import com.deutchall.identification.PFQuestion;
 import com.deutchall.identification.PFRanking;
 import com.deutchall.identification.Question;
@@ -609,7 +610,7 @@ public class GameActivity extends Activity {
 			rad2.setBackgroundResource(R.drawable.button_correct);
 			break;
 		default:
-			throw new Error("Correct answer coherence error");
+			ErrorLauncher.throwError("Correct answer coherence error");
 		}	
 	}
 	
@@ -624,6 +625,8 @@ public class GameActivity extends Activity {
 		case 3:
 			rad2.setBackgroundResource(R.drawable.button_wrong);
 			break;
+		default:
+			ErrorLauncher.throwError("Radio buttons coherence error");
 		}
 	}
 	
@@ -642,7 +645,7 @@ public class GameActivity extends Activity {
 	private void cleanAndExit(boolean error) {
 		cancelUpdateTime();
 		if(error) {
-			throw new Error("Exception caugth at runningtime");
+			ErrorLauncher.throwError("Exception caugth at game runtime");
 		}
 		GameActivity.this.finish();
 	}
