@@ -21,6 +21,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBAgent extends SQLiteOpenHelper {
 	
+	private static final int ONEKB =  1024;
 	private static DBAgent instance = null;
 	private static Context context;
 	private SQLiteDatabase sqLiteDatabase;
@@ -56,10 +57,9 @@ public class DBAgent extends SQLiteOpenHelper {
 	
     private void copyDataBase() throws IOException, IndexOutOfBoundsException {
     		int length;
-    		byte[] buffer = new byte[1024];
+    		byte[] buffer = new byte[ONEKB];
     		
     		InputStream input = context.getAssets().open(Sql.DATABASE_NAME);
-    		
     		String outputFileName = context.getDatabasePath(Sql.DATABASE_NAME).getPath();
     		OutputStream output = new FileOutputStream(outputFileName);
     		

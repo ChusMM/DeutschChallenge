@@ -47,6 +47,7 @@ public class RankingActivity extends Activity implements OnClickListener {
         ((Button) findViewById(R.id.bt_ddd)).setOnClickListener(this);
         ((Button) findViewById(R.id.bt_verb)).setOnClickListener(this);
         ((Button) findViewById(R.id.bt_gram)).setOnClickListener(this);
+        
         selectRanking(this.gameId);
         fillListView();
         this.created = true;
@@ -116,7 +117,7 @@ public class RankingActivity extends Activity implements OnClickListener {
 			gameId = Sql.GRAMATIK_ID;
 			break;
 		default:
-			return;
+			ErrorLauncher.throwError("onClick handler coherenceless exception");
 		}
 		selectRanking(gameId);
 		ShowAnimationTask sat = new ShowAnimationTask();
@@ -176,13 +177,9 @@ public class RankingActivity extends Activity implements OnClickListener {
 	private class ShowAnimationTask extends TimerTask {
 		@Override
 		public void run() {
-			show();
+			ShowRunnable sr = new ShowRunnable();
+			timeHandler.post(sr);
 		}
-	}
-	
-	private void show() {
-		ShowRunnable sr = new ShowRunnable();
-		timeHandler.post(sr);
 	}
 	
 	private class  ShowRunnable implements Runnable {
@@ -213,7 +210,6 @@ public class RankingActivity extends Activity implements OnClickListener {
 		    		   onClear();
 		           }
 		       })
-		       
 		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		                dialog.cancel();
