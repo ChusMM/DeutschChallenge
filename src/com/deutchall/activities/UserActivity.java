@@ -10,14 +10,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.deutchall.identification.ErrorLauncher;
 import com.deutchall.identification.PFUser;
 import com.deutchall.adapters.UserAdapter;
 
-public class UserActivity extends Activity {
+public class UserActivity extends Activity implements OnItemClickListener {
 	
 	public static final String USER = "user";
 	public static final String TAG = "com.deutchall.activities.UserActivity";
@@ -25,12 +28,14 @@ public class UserActivity extends Activity {
 	private boolean created = false;
 	private ListView listView;
 	private UserAdapter userAdapter;
+	private String selected = null;
+	// private int androidVersion = Integer.parseInt(android.os.Build.VERSION.RELEASE.substring(0, 1));
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user);
-        this.listView = (ListView)findViewById(R.id.listUsers);
+        this.listView = (ListView) findViewById(R.id.listUsers);
         this.fillListView();
         this.created = true;
     }
@@ -74,11 +79,29 @@ public class UserActivity extends Activity {
 			Log.e(TAG, e.toString());
 			ErrorLauncher.throwError(e.toString());
 		}
-		userAdapter.setSelected(null);
+		selected = null;
 		listView.setFastScrollEnabled(true);
 		listView.setAdapter(userAdapter);
-		listView.setOnItemClickListener(userAdapter);
+		listView.setOnItemClickListener(this);
+		clearSelection();
 	}
+	
+	@Override
+    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+		if (parent.getId() == R.id.listUsers) {		
+    		clearSelection();
+    		//if (androidVersion < 4) {
+    			//int lastPos = parent.getLastVisiblePosition();
+				//int desiredPos = lastPos - pos;
+				//((TextView) parent.getChildAt(desiredPos)).setTextColor(getResources().getColor(R.color.white));
+				//((TextView) parent.getChildAt(desiredPos)).setBackgroundColor(getResources().getColor(R.color.selected));
+    		//} else {
+    		((TextView) view).setTextColor(getResources().getColor(R.color.white));
+    		((TextView) view).setBackgroundColor(getResources().getColor(R.color.selected));
+    		//}
+    		selected = ((TextView) view).getText().toString();
+		}
+    }
 	
 	public void menu(View view) {
 		this.terminate();
@@ -91,14 +114,20 @@ public class UserActivity extends Activity {
 	}
 	
 	public void next(View view) {
-		String selected = userAdapter.getSelected();
-		if(selected != null) {
+		if (selected != null) {
 			Intent intent = new Intent(this, SelectGameActivity.class);
 			intent.putExtra(USER, selected);
 	    	startActivity(intent);
 	    	this.terminate();
 		} else {
 			this.toastMsg("Please, select an existing profile from the list");
+		}
+	}
+	
+	private void clearSelection() {
+		for (int i = 0; i < listView.getChildCount(); i++) {
+			((TextView) listView.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+			((TextView) listView.getChildAt(i)).setBackgroundColor(getResources().getColor(R.color.shadow));
 		}
 	}
 	
