@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
 
 import com.deutchall.exceptions.InvalidGameIdException;
 import com.deutchall.identification.ErrorLauncher;
@@ -60,7 +59,9 @@ public class GameActivity extends Activity {
 	private int remainingTime;
 	private boolean called = false;
 	
-	private final Lock lock = new ReentrantLock();
+	private static final int N_ACCESS = 1;
+	private final Semaphore lock = new Semaphore(N_ACCESS);
+	
 	private final Handler timeOutHandler = new Handler();
 	private final Handler RemainingTimeHandler = new Handler();
 	private final Handler timeHandler = new Handler();
@@ -186,15 +187,23 @@ public class GameActivity extends Activity {
 	}
 	
 	private void launchCheckAnswer() {
-		lock.lock();
+		try {
+			lock.acquire();
+		} catch (InterruptedException e) {
+			Log.e(TAG, e.toString());
+			ErrorLauncher.throwError(e.toString());
+		}
 		try {
 			if (!called) {
 				setCalled(true);
 				CheckAnswerRunnable car = new CheckAnswerRunnable();
 				timeOutHandler.post(car);
 			}
-		} finally {
-			lock.unlock();
+		} catch (Exception e) {
+			Log.e(TAG, e.toString());
+		}
+		finally {
+			lock.release();
 		}
 	}
 	
@@ -626,7 +635,7 @@ public class GameActivity extends Activity {
 			rad2.setBackgroundResource(R.drawable.button_wrong);
 			break;
 		default:
-			ErrorLauncher.throwError("Radio buttons coherence error");
+			break; // Timeout !!!
 		}
 	}
 	
