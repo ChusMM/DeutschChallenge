@@ -40,20 +40,16 @@ public final class R {
     }
     public static final class drawable {
         public static final int bgmetal=0x7f020000;
-        public static final int btn_circle_normal=0x7f020001;
-        public static final int btn_circle_pressed=0x7f020002;
-        public static final int btn_circle_selected=0x7f020003;
-        public static final int button_correct=0x7f020004;
-        public static final int button_custom=0x7f020005;
-        public static final int button_default=0x7f020006;
-        public static final int button_default_selected=0x7f020007;
-        public static final int button_gamesel=0x7f020008;
-        public static final int button_gamesel_selected=0x7f020009;
-        public static final int button_wrong=0x7f02000a;
-        public static final int forest=0x7f02000b;
-        public static final int gametopbar=0x7f02000c;
-        public static final int ic_launcher=0x7f02000d;
-        public static final int icon=0x7f02000e;
+        public static final int button_correct=0x7f020001;
+        public static final int button_custom=0x7f020002;
+        public static final int button_default=0x7f020003;
+        public static final int button_default_selected=0x7f020004;
+        public static final int button_gamesel=0x7f020005;
+        public static final int button_gamesel_selected=0x7f020006;
+        public static final int button_wrong=0x7f020007;
+        public static final int forest=0x7f020008;
+        public static final int gametopbar=0x7f020009;
+        public static final int icon=0x7f02000a;
     }
     public static final class id {
         public static final int RelativeLayout=0x7f0a001f;
