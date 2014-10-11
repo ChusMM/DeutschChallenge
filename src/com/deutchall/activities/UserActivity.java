@@ -28,8 +28,6 @@ public class UserActivity extends Activity implements OnItemClickListener {
 	private boolean created = false;
 	private ListView listView;
 	private UserAdapter userAdapter;
-	private String selected = null;
-	// private int androidVersion = Integer.parseInt(android.os.Build.VERSION.RELEASE.substring(0, 1));
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,27 +77,16 @@ public class UserActivity extends Activity implements OnItemClickListener {
 			Log.e(TAG, e.toString());
 			ErrorLauncher.throwError(e.toString());
 		}
-		selected = null;
+		userAdapter.setSelected(null);
 		listView.setFastScrollEnabled(true);
 		listView.setAdapter(userAdapter);
 		listView.setOnItemClickListener(this);
-		clearSelection();
 	}
 	
 	@Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-		if (parent.getId() == R.id.listUsers) {		
-    		clearSelection();
-    		//if (androidVersion < 4) {
-    			//int lastPos = parent.getLastVisiblePosition();
-				//int desiredPos = lastPos - pos;
-				//((TextView) parent.getChildAt(desiredPos)).setTextColor(getResources().getColor(R.color.white));
-				//((TextView) parent.getChildAt(desiredPos)).setBackgroundColor(getResources().getColor(R.color.selected));
-    		//} else {
-    		((TextView) view).setTextColor(getResources().getColor(R.color.white));
-    		((TextView) view).setBackgroundColor(getResources().getColor(R.color.selected));
-    		//}
-    		selected = ((TextView) view).getText().toString();
+		if (parent.getId() == R.id.listUsers) {
+    		userAdapter.setSelected(((TextView) view).getText().toString());
 		}
     }
 	
@@ -114,20 +101,13 @@ public class UserActivity extends Activity implements OnItemClickListener {
 	}
 	
 	public void next(View view) {
-		if (selected != null) {
+		if (userAdapter.getSelected() != null) {
 			Intent intent = new Intent(this, SelectGameActivity.class);
-			intent.putExtra(USER, selected);
+			intent.putExtra(USER, userAdapter.getSelected());
 	    	startActivity(intent);
 	    	this.terminate();
 		} else {
 			this.toastMsg("Please, select an existing profile from the list");
-		}
-	}
-	
-	private void clearSelection() {
-		for (int i = 0; i < listView.getChildCount(); i++) {
-			((TextView) listView.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
-			((TextView) listView.getChildAt(i)).setBackgroundColor(getResources().getColor(R.color.shadow));
 		}
 	}
 	

@@ -16,11 +16,20 @@ public class UserAdapter extends ArrayAdapter<User> {
 	
 	private final Context context;
     private final List<User> users;
+    private String selected = null;
     
     public UserAdapter(Context context, List<User> users) {
         super(context, R.layout.rowuser, users);
         this.context = context;
         this.users = users;
+    }
+    
+    public String getSelected() {
+    	return this.selected;
+    }
+    
+    public void setSelected(String selected) {
+    	this.selected = selected;
     }
     
     @Override
@@ -30,6 +39,13 @@ public class UserAdapter extends ArrayAdapter<User> {
     	
     	TextView txRowUser = (TextView) rowView.findViewById(R.id.userNameRow);
     	txRowUser.setText(users.get(position).getName());
+    	if (txRowUser.getText().toString().equals(selected)) {
+    		txRowUser.setTextColor(getContext().getResources().getColor(R.color.white));
+    		txRowUser.setBackgroundColor(getContext().getResources().getColor(R.color.selected));
+    	} else {
+    		txRowUser.setTextColor(getContext().getResources().getColor(R.color.white));
+    		txRowUser.setBackgroundColor(getContext().getResources().getColor(R.color.shadow));
+    	}
     	return rowView;
     }
 }
