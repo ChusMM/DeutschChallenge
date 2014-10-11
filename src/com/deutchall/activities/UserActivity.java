@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +25,8 @@ public class UserActivity extends Activity implements OnItemClickListener {
 	
 	public static final String USER = "user";
 	public static final String TAG = "com.deutchall.activities.UserActivity";
+	
+	private static final int androidVersion = Integer.parseInt(Build.VERSION.RELEASE.substring(0, 1));
 	
 	private boolean created = false;
 	private ListView listView;
@@ -64,6 +67,7 @@ public class UserActivity extends Activity implements OnItemClickListener {
 	private void fillListView() {
 		try {
 			userAdapter = new UserAdapter(this, PFUser.select(this));
+			refreshListView();
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
 			ErrorLauncher.throwError(e.toString());
@@ -77,15 +81,24 @@ public class UserActivity extends Activity implements OnItemClickListener {
 			Log.e(TAG, e.toString());
 			ErrorLauncher.throwError(e.toString());
 		}
+	}
+	
+	private void refreshListView() {
 		userAdapter.setSelected(null);
 		listView.setFastScrollEnabled(true);
 		listView.setAdapter(userAdapter);
 		listView.setOnItemClickListener(this);
+		clearSelection();
 	}
 	
 	@Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-		if (parent.getId() == R.id.listUsers) {
+		if (parent.getId() == R.id.listUsers) {		
+    		if (androidVersion >= 4) {
+    			clearSelection();
+    			((TextView) view).setTextColor(getResources().getColor(R.color.white));
+    			((TextView) view).setBackgroundColor(getResources().getColor(R.color.selected));
+    		}
     		userAdapter.setSelected(((TextView) view).getText().toString());
 		}
     }
@@ -108,6 +121,13 @@ public class UserActivity extends Activity implements OnItemClickListener {
 	    	this.terminate();
 		} else {
 			this.toastMsg("Please, select an existing profile from the list");
+		}
+	}
+	
+	private void clearSelection() {
+		for (int i = 0; i < listView.getChildCount(); i++) {
+			((TextView) listView.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+			((TextView) listView.getChildAt(i)).setBackgroundColor(getResources().getColor(R.color.shadow));
 		}
 	}
 	
