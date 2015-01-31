@@ -5,6 +5,7 @@ import java.util.List;
 import com.deutchall.activities.R;
 import com.deutchall.identification.Ranking;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +24,10 @@ public class RankingAdapter extends ArrayAdapter<Ranking> {
         this.ranking = ranking;
     }
     
-    @Override
+    @SuppressLint("ViewHolder")
+	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
-    	LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	View rowView = inflater.inflate(R.layout.rowrank, parent, false);
     	
     	TextView txUser = (TextView) rowView.findViewById(R.id.txUser);

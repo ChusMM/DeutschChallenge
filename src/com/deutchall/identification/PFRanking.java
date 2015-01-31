@@ -16,63 +16,63 @@ public class PFRanking {
 	public static List<Ranking> getRanking(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		switch(idGame) {
 		case Sql.DERDIEDAS_ID:
-			return select(context, Sql.DDD_RANK);
+			return select(Sql.DDD_RANK);
 		case Sql.VERBEN_ID:
-			return select(context, Sql.VERB_RANK);
+			return select(Sql.VERB_RANK);
 		case Sql.GRAMATIK_ID:
-			return select(context, Sql.GRAM_RANK);
+			return select(Sql.GRAM_RANK);
 		default:
 			throw new Error("GameActivity: invalid game identificator");
 		}
 	}
 	
-	private static List<Ranking> select(Context context, String rankingTable) throws SQLiteException, IndexOutOfBoundsException, IOException {
+	private static List<Ranking> select(String rankingTable) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		String[] columns = new String[] {Sql.KEY_RANK, Sql.RANK_USER, Sql.RANK_DATE, Sql.SCORE};
-		List<Ranking> ranking = DBAgent.getInstance(context).selectRanking(rankingTable, columns, null, null, null, null, Sql.SCORE + " DESC");
+		List<Ranking> ranking = DBAgent.getInstance().selectRanking(rankingTable, columns, null, null, null, null, Sql.SCORE + " DESC");
 		return ranking;
 	}
 	
-	public static void insertIntoRankingGame(Context context, int idGame, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException, InvalidGameIdException {
+	public static void insertIntoRankingGame(int idGame, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException, InvalidGameIdException {
 		switch(idGame) {
 		case Sql.DERDIEDAS_ID:
-			insert(context, Sql.DDD_RANK, name, date, score);
+			insert(Sql.DDD_RANK, name, date, score);
 			break;
 		case Sql.VERBEN_ID:
-			insert(context, Sql.VERB_RANK, name, date, score);
+			insert(Sql.VERB_RANK, name, date, score);
 			break;
 		case Sql.GRAMATIK_ID:
-			insert(context, Sql.GRAM_RANK, name, date, score);
+			insert(Sql.GRAM_RANK, name, date, score);
 			break;
 		default:
 			throw new InvalidGameIdException();
 		}
 	}
 	
-	private static void insert(Context context, String rankingTable, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException {
+	private static void insert(String rankingTable, String name, String date, int score) throws SQLiteException, IndexOutOfBoundsException, IOException {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(Sql.RANK_USER, name);
 		contentValues.put(Sql.RANK_DATE, date);
 		contentValues.put(Sql.SCORE, score);
-		DBAgent.getInstance(context).insert(rankingTable, contentValues);
+		DBAgent.getInstance().insert(rankingTable, contentValues);
 	}
 	
-	public static void deleteRankingGame(Context context, int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException, InvalidGameIdException {
+	public static void deleteRankingGame(int idGame) throws SQLiteException, IndexOutOfBoundsException, IOException, InvalidGameIdException {
 		switch(idGame) {
 		case Sql.DERDIEDAS_ID:
-			delete(context, Sql.DDD_RANK);
+			delete(Sql.DDD_RANK);
 			break;
 		case Sql.VERBEN_ID:
-			delete(context, Sql.VERB_RANK);
+			delete(Sql.VERB_RANK);
 			break;
 		case Sql.GRAMATIK_ID:
-			delete(context, Sql.GRAM_RANK);
+			delete(Sql.GRAM_RANK);
 			break;
 		default:
 			throw new InvalidGameIdException();
 		}
 	}
 	
-	private static void delete(Context context, String rankingTable) throws SQLiteException, IndexOutOfBoundsException, IOException {
-		DBAgent.getInstance(context).delete(rankingTable, null, null);
+	private static void delete(String rankingTable) throws SQLiteException, IndexOutOfBoundsException, IOException {
+		DBAgent.getInstance().delete(rankingTable, null, null);
 	}
 }

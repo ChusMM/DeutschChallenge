@@ -2,6 +2,7 @@ package com.deutchall.adapters;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,8 @@ public class UserAdapter extends ArrayAdapter<User> {
     	this.selected = selected;
     }
     
-    @Override
+    @SuppressLint("ViewHolder")
+	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
     	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	View rowView = inflater.inflate(R.layout.rowuser, parent, false);

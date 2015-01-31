@@ -66,7 +66,7 @@ public class UserActivity extends Activity implements OnItemClickListener {
 	
 	private void fillListView() {
 		try {
-			userAdapter = new UserAdapter(this, PFUser.select(this));
+			userAdapter = new UserAdapter(this, PFUser.select());
 			refreshListView();
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());

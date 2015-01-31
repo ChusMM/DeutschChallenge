@@ -87,7 +87,7 @@ public class GameActivity extends Activity {
         gameId = getIntent().getIntExtra(SelectGameActivity.GAME, -1);
         
         try {
-			questions = PFQuestion.getGameQuestions(this, gameId);
+			questions = PFQuestion.getGameQuestions(gameId);
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());
 			cleanAndExit(true);
@@ -472,7 +472,7 @@ public class GameActivity extends Activity {
 	private void rankingAndClose() {
 		try {
 			String date = getDate();
-			PFRanking.insertIntoRankingGame(this, gameId, name, date, score);
+			PFRanking.insertIntoRankingGame(gameId, name, date, score);
 			gameover();
 		} catch (SQLiteException e) {
 			Log.e(TAG, e.toString());

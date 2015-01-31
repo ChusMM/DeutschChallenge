@@ -230,7 +230,7 @@ public class RankingActivity extends Activity implements OnClickListener {
 
 	private void onClear() {
 		try {
-			PFRanking.deleteRankingGame(this, gameId);
+			PFRanking.deleteRankingGame(gameId);
 			alertMsg("Ranking cleared");
 			fillListView();
 		} catch (SQLiteException e) {

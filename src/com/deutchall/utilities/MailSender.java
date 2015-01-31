@@ -1,6 +1,6 @@
 package com.deutchall.utilities;
 
-import javax.activation.DataHandler;
+/*import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
@@ -17,11 +17,11 @@ import android.content.Context;
 //import android.graphics.drawable.Drawable;
 //import java.io.File;
 //import java.net.URL;
-import java.util.Properties;
+import java.util.Properties; */
 
-public class MailSender extends javax.mail.Authenticator {
+public class MailSender { // extends javax.mail.Authenticator {
 	
-    private String mailhost = "smtp.gmail.com";   
+   /*private String mailhost = "smtp.gmail.com";   
     private String user;   
     private String password;   
     private Session session;
@@ -96,5 +96,5 @@ public class MailSender extends javax.mail.Authenticator {
     	} catch(Exception e) {
         	System.out.println("Ha habido una excepcion: " + e.getMessage());
         } 
-    }   
-}  
+    }*/   
+} 

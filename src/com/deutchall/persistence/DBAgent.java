@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import com.deutchall.activities.DeutschChallenge;
 import com.deutchall.identification.Question;
 import com.deutchall.identification.Ranking;
 import com.deutchall.identification.User;
@@ -22,31 +23,26 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBAgent extends SQLiteOpenHelper {
 	
 	private static final int ONEKB =  1024;
-	private static DBAgent instance = null;
-	private static Context context;
 	private SQLiteDatabase sqLiteDatabase;
+	private Context context;
+	private static DBAgent instance = null;
 	
-	private  DBAgent(Context context) throws SQLiteException, IOException, IndexOutOfBoundsException {
-		super(context, Sql.DATABASE_NAME, null, Sql.DATABASE_VERSION);
-		try {
-			createDataBase();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	
+	private  DBAgent() throws SQLiteException, IOException, IndexOutOfBoundsException {
+		super(DeutschChallenge.getAppContext(), Sql.DATABASE_NAME, null, Sql.DATABASE_VERSION);
+		this.context = DeutschChallenge.getAppContext();
+		this.createDataBase();
 	}
 	
-	public synchronized static DBAgent getInstance(Context context) throws SQLiteException, IndexOutOfBoundsException, IOException {
-		//if (instance  != null) {
-		DBAgent.context = context;
-		instance = new DBAgent(context);
-		//}
+	public synchronized static DBAgent getInstance() throws SQLiteException, IndexOutOfBoundsException, IOException {
+		instance = new DBAgent();
 		return instance;
 	}
 	
 	private void createDataBase() throws SQLiteException, IOException, IndexOutOfBoundsException {
-		if (!checkDataBase()) {
-			getReadableDatabase();
-			copyDataBase() ;
+		if (!this.checkDataBase()) {
+			this.getReadableDatabase();
+			this.copyDataBase() ;
 		}
 	}
 	
@@ -56,19 +52,19 @@ public class DBAgent extends SQLiteOpenHelper {
     }
 	
     private void copyDataBase() throws IOException, IndexOutOfBoundsException {
-    		int length;
-    		byte[] buffer = new byte[ONEKB];
-    		
-    		InputStream input = context.getAssets().open(Sql.DATABASE_NAME);
-    		String outputFileName = context.getDatabasePath(Sql.DATABASE_NAME).getPath();
-    		OutputStream output = new FileOutputStream(outputFileName);
-    		
-            while ((length = input.read(buffer)) > 0) {
-            	output.write(buffer, 0, length);
-            	output.flush();
-            }
-            output.close();
-            input.close();
+		int length;
+		byte[] buffer = new byte[ONEKB];
+		
+		InputStream input = context.getAssets().open(Sql.DATABASE_NAME);
+		String outputFileName = context.getDatabasePath(Sql.DATABASE_NAME).getPath();
+		OutputStream output = new FileOutputStream(outputFileName);
+		
+        while ((length = input.read(buffer)) > 0) {
+        	output.write(buffer, 0, length);
+        	output.flush();
+        }
+        output.close();
+        input.close();
     }
     	
 	private SQLiteDatabase openToRead() throws SQLiteException {		
