@@ -201,8 +201,7 @@ public class GameActivity extends Activity {
 			}
 		} catch (Exception e) {
 			Log.e(TAG, e.toString());
-		}
-		finally {
+		} finally {
 			lock.release();
 		}
 	}

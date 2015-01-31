@@ -23,7 +23,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="left|center_vertical|center_horizontal"
-                android:text="@string/username_en"
+                android:text="@string/username"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="@dimen/textpanel_size" />
 
@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="@string/number_question_en"
+                android:text="@string/number_question"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="@dimen/textpanel_size" />
 
@@ -51,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="left|center_vertical|center_horizontal"
-                android:text="@string/score_en"
+                android:text="@string/score"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="@dimen/textpanel_size" />
 
@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:text="@string/mute_en" />
+            android:text="@string/mute" />
 
         <Button
             android:id="@+id/btMenu"
@@ -118,7 +118,7 @@
             android:layout_toLeftOf="@+id/btMenu"
             android:layout_toRightOf="@+id/btSound"
             android:gravity="center_vertical|center_horizontal"
-            android:text="@string/question_en"
+            android:text="@string/question"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"
             android:textSize="@dimen/question_size" />

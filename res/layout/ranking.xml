@@ -67,7 +67,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:onClick="clear"
-        android:text="@string/clearrank_en" />
+        android:text="@string/clearrank" />
 
     <TextView
         android:id="@+id/txRankUser"
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/tabs"
-        android:text="@string/fullname_en"
+        android:text="@string/fullname"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white" />
 
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tabs"
-        android:text="@string/score_en"
+        android:text="@string/score"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white" />
 

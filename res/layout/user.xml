@@ -9,7 +9,7 @@
         android:id="@+id/txUserInf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/userinf_en"
+        android:text="@string/userinf"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black" />
 
@@ -40,7 +40,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:onClick="menu"
-        android:text="@string/menu_en" />
+        android:text="@string/menu" />
 
     <Button
         android:id="@+id/btGo"
@@ -49,7 +49,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:onClick="next"
-        android:text="@string/nextq_en" />
+        android:text="@string/nextq" />
 
     <Button
         android:id="@+id/btAdd"
@@ -60,6 +60,6 @@
         android:layout_toRightOf="@+id/btBack"
         android:gravity="center_vertical|center_horizontal"
         android:onClick="newProfile"
-        android:text="@string/newprofile_en" />
+        android:text="@string/newprofile" />
 
 </RelativeLayout>

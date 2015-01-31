@@ -14,7 +14,7 @@
         android:layout_weight="3"
         android:lines="1"
         android:maxLines="1"
-        android:text="@string/titulo"
+        android:text="@string/title"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white" />
 
@@ -38,7 +38,7 @@
         android:gravity="right"
         android:lines="1"
         android:maxLines="1"
-        android:text="@string/titulo"
+        android:text="@string/title"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white" />
 

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/termsconditions_en"
+        android:text="@string/termsconditions"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/black" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="@string/privacypolicy_en"
+        android:text="@string/privacypolicy"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/black" />
 
@@ -33,7 +33,7 @@
         android:layout_above="@+id/lbPrivacy"
         android:layout_alignParentRight="true"
         android:onClick="register"
-        android:text="@string/register_en" />
+        android:text="@string/register" />
 
     <Button
         android:id="@+id/btBack"
@@ -43,7 +43,7 @@
         android:layout_alignBottom="@+id/btReg"
         android:layout_alignParentLeft="true"
         android:onClick="menu"
-        android:text="@string/menu_en" />
+        android:text="@string/menu" />
 
     <EditText
         android:id="@+id/txName"
@@ -70,7 +70,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:gravity="center_vertical|center_horizontal"
-        android:text="@string/e_mail_en"
+        android:text="@string/e_mail"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black" />
 
@@ -95,7 +95,7 @@
         android:layout_alignLeft="@+id/txName"
         android:layout_alignRight="@+id/txName"
         android:gravity="center_vertical|center_horizontal"
-        android:text="@string/fullname_en"
+        android:text="@string/fullname"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black" />
 
